@@ -1,0 +1,65 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
+<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+using Microsoft.Practices.Unity;
+using System;
+using System.Linq;
+using <%= Database %>.Data;
+using <%= Database %>.Persistence;
+using EasyLOB;
+using EasyLOB.Data;
+using EasyLOB.Persistence;
+
+namespace <%= Database %>.Shell
+{
+    partial class Program
+    {
+        private static void Persistence<%= Database %>Demo()
+        {
+            Console.WriteLine("\nPersistence <%= Database %> Demo\n");
+
+            var container = new UnityContainer();
+            UnityHelper.RegisterMappings(container);
+
+            IUnitOfWork unitOfWork = (IUnitOfWork)container.Resolve<I<%= Database %>UnitOfWork>();
+            Console.WriteLine(unitOfWork.GetType().FullName + " with " + unitOfWork.DBMS.ToString() + "\n");
+
+<%  foreach (TableSchema SourceTable in SourceTables) {
+        string tableName = TableName(SourceTable.FullName);
+        string className = ClassName(SourceTable.FullName, Culture);
+        string objectName = ObjectName(SourceTable.FullName, Culture);
+        
+        string defaultProperty = "";
+        if (SourceTable.NonPrimaryKeyColumns.Count > 0) {
+            defaultProperty = PropertyName(SourceTable.NonPrimaryKeyColumns[0].Name);
+        } else {
+            defaultProperty = PropertyName(SourceTable.PrimaryKey.MemberColumns[0].Name);
+        }
+        
+        ColumnSchema column = SourceTable.PrimaryKey.MemberColumns[0];
+        string keyColumn = ColumnName(column.Name);
+        string keyProperty = PropertyName(column.Name);
+        //string keyPropertyType = GetType(column.DataType);
+        string keyPropertyType = GetTypeNullable(column.DataType);
+        string keyPropertyDbType = GetDbType(column.DataType); %>
+            Persistence<%= Database %>Data<<%= className %>>(unitOfWork);
+<%  } %>
+        }
+
+        private static void Persistence<%= Database %>Data<TEntity>(IUnitOfWork unitOfWork)
+            where TEntity : class, IZDataBase
+        {
+            IGenericRepository<TEntity> repository = unitOfWork.GetRepository<TEntity>();
+            TEntity entity = repository.Query.FirstOrDefault();
+            Console.WriteLine(typeof(TEntity).Name + ": " + repository.CountAll());
+        }
+    }
+}

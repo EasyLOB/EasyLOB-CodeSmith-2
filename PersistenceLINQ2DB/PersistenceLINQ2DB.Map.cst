@@ -1,0 +1,92 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+
+<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Database" Description="Table" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%
+if (SourceTable.PrimaryKey == null) {
+    throw new ApplicationException("SourceTable does not contain a primary key.");
+}
+      
+string tableName = TableName(SourceTable.FullName);
+string className = ClassName(SourceTable.FullName, Culture);
+string objectName = ObjectName(SourceTable.FullName, Culture);
+%>
+using <%= Namespace.Replace(".Persistence", ".Data") %>;
+using LinqToDB.Mapping;
+
+namespace <%= Namespace %>
+{
+    public static partial class <%= Database %>LINQ2DBMap
+    {
+        public static void <%= className %>Map(MappingSchema mappingSchema)
+        {
+            mappingSchema.GetFluentMappingBuilder().Entity<<%= className %>>()
+                .HasTableName("<%= tableName %>")
+<%  // Properties
+    int order = 1;
+    foreach (ColumnSchema column in SourceTable.Columns) {
+        bool propertyIsPrimaryKey = column.IsPrimaryKeyMember;
+        bool propertyIsIdentity = IsIdentity(SourceTable.PrimaryKey.MemberColumns[0]);
+        bool propertyIsNullable = column.AllowDBNull;
+        bool isNullable = column.AllowDBNull; %>
+
+                .Property(x => x.<%= PropertyName(column.Name) %>)
+<%      if (propertyIsPrimaryKey) {
+            if (SourceTable.PrimaryKey.MemberColumns.Count > 1) { %>
+                    .IsPrimaryKey(<%= order++.ToString() %>)
+<%          } else { %>            
+                    .IsPrimaryKey()
+<%          }
+            if (propertyIsIdentity) { %>
+                    .IsIdentity()
+<%          }
+        } %>
+                    .HasColumnName("<%= column.Name %>")
+                    .HasDataType(LinqToDB.DataType.<%= GetLINQToDBType(column.DataType) %>)<%
+        if (IsString(column.DataType)) { 
+            string hasMaxLength = column.Size == -1 || IsNText(column) ? 1024.ToString() : column.Size.ToString();
+            string hasMaxLengthComment = column.Size == -1 ? " // !?!" : ""; %>
+                    .HasLength(<%= hasMaxLength %>)<%
+        } %>
+                    .IsNullable(<% if (isNullable) { %>true<% } else { %>false<% } %>)
+<%  }
+    foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
+        string fkClassName = ClassName(fkTable.ForeignKeyTable.FullName, Culture);
+        ColumnSchema fkColumn = fkTable.ForeignKeyMemberColumns[0];
+        string fkPropertyName = PropertyName(fkColumn.Name);
+        
+        string pkClassName = ClassName(fkTable.PrimaryKeyTable.FullName, Culture);
+        ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
+        string pkPropertyName = PropertyName(pkColumn.Name);
+        pkPropertyName = pkPropertyName == className ? pkPropertyName + fkPropertyName : pkPropertyName;        
+            
+        bool isNullable = fkColumn.AllowDBNull;
+        string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+
+        foreach (ColumnSchema column in fkTable.ForeignKeyMemberColumns) { %>
+            
+                .Property(x => x.<%= pkClassPropertyName %>)
+                    .IsNotColumn()
+<%      }
+    }
+    foreach (TableKeySchema primaryKey in SourceTable.PrimaryKeys) {
+        string pkClassName = ClassName(primaryKey.ForeignKeyTable.Name, Culture); %>
+
+                .Property(x => x.<%= Plural(pkClassName, Culture) %>)
+                    .IsNotColumn()
+<%  } %>
+            
+                .Property(x => x.LookupText)
+                    .IsNotColumn()                    
+                ;    
+        }
+    }
+}

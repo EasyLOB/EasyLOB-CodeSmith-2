@@ -1,0 +1,270 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+
+<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Database" Description="Table" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%
+
+// Associations (FK) => Relationships FK
+// Collections (PK)  => Relationships PK
+
+if (SourceTable.PrimaryKey == null) {
+    throw new ApplicationException("SourceTable does not contain a primary key.");
+}
+
+string tableName = TableName(SourceTable.FullName);
+string className = ClassName(SourceTable.FullName, Culture);
+string objectName = ObjectName(SourceTable.FullName, Culture);
+
+// LookupProperty
+//   2nd property, or 1st if there is no 2nd property
+//   1st string property
+
+string lookupProperty = PropertyName((SourceTable.Columns.Count >= 2) ? SourceTable.Columns[1].Name : SourceTable.Columns[0].Name);
+foreach (ColumnSchema column in SourceTable.Columns) {
+    // First String non-primary-key column
+    if (!column.IsPrimaryKeyMember && IsString(column.DataType))    
+    {
+        // First 
+        lookupProperty = PropertyName(column.Name);
+        break;
+    }
+}
+
+// Associations
+/*
+string associations = "";
+string associationKeys = "";
+foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
+    string fkClassName = ClassName(fkTable.ForeignKeyTable.FullName, Culture);
+    ColumnSchema fkColumn = fkTable.ForeignKeyMemberColumns[0];
+    string fkPropertyName = PropertyName(fkColumn.Name);
+    
+    string pkClassName = ClassName(fkTable.PrimaryKeyTable.FullName, Culture);            
+    ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
+    string pkPropertyName = PropertyName(pkColumn.Name);
+    
+    string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+    
+    associations += (associations == "" ? " " : ", ") + "\"" + pkClassPropertyName + "\"";
+
+    string associationKey = "";
+    foreach(ColumnSchema column in fkTable.PrimaryKeyMemberColumns)
+    {
+        associationKey += (associationKey == "" ? "" : ", ") + "\"" + PropertyName(column.Name) + "\"";
+    }
+    associationKeys += (associationKeys == "" ? " " : ", ") + "new string[] { " + associationKey + " }";
+}
+*/
+
+// Collections
+/*
+string collections = "";
+string isVisibleCollections = "";
+string collectionKeys = "";
+foreach (TableKeySchema primaryKey in SourceTable.PrimaryKeys) {
+    string pkClassName = ClassName(primaryKey.ForeignKeyTable.Name, Culture);
+    collections += (collections == "" ? " " : ", ") + "\"" + Plural(pkClassName, Culture) + "\"";
+    isVisibleCollections += (isVisibleCollections == "" ? " " : ", ") + "true";
+    
+    string collectionKey = "";
+    foreach (ColumnSchema column in primaryKey.PrimaryKeyMemberColumns) {
+        collectionKey += (collectionKey == "" ? " " : ", ") + "\"" + column.Name + "\"";
+    }    
+    collectionKeys += (collectionKeys == "" ? " " : ", ") + "new string[] { " + collectionKey + " }";
+}
+*/
+
+// IsIdentity
+
+string isIdentity = IsIdentity(SourceTable.PrimaryKey.MemberColumns[0]) ? "true" : "false";
+
+// KeyProperties
+
+string keys = "";
+string keyParameters = "";
+string keyLinq = "";
+string keyCommas = "";
+string keyIds = "";
+int linq = 0;
+foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
+    keys += (keys == "" ? "" : ", ") + "\"" + PropertyName(column.Name) + "\"";
+    keyParameters += (keyParameters == "" ? "" : ", ") + GetType(column.DataType, column.AllowDBNull) + " " + ObjectName(column.Name, Culture);
+    keyCommas += (keyCommas == "" ? "" : ", ") + PropertyName(column.Name);
+    keyLinq += (keyLinq == "" ? "" : " && ") + PropertyName(column.Name) + " == @" + linq.ToString();
+    keyIds += (keyIds == "" ? "" : ", ") + "(" + GetType(column.DataType, false) + ")ids[" + linq.ToString() + "]";
+    linq++;
+}
+
+// OrderByExpression
+//   2nd property, or 1st if there is no 2nd property
+//   1st string property
+
+string orderByExpression = PropertyName((SourceTable.Columns.Count >= 2) ? SourceTable.Columns[1].Name : SourceTable.Columns[0].Name);
+foreach (ColumnSchema column in SourceTable.Columns) {
+    // First String non-primary-key column
+    if (!column.IsPrimaryKeyMember && IsString(column.DataType))    
+    {
+        // First 
+        orderByExpression = PropertyName(column.Name);
+        break;
+    }
+}
+
+// NHibernate
+
+bool isNHibernate = true;
+string pkEquals = ""; // property1 == object.Property1 && ..
+string pkHashCode = ""; // Property1.ToString() + "|" + ...
+foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
+    pkEquals += (pkEquals == "" ? "" : " && ") + PropertyName(column.Name) + " == " + objectName + "." + PropertyName(column.Name);
+    pkHashCode += (pkHashCode == "" ? "" : " + \"|\" + ") + PropertyName(column.Name) + ".ToString()";
+}
+
+string comma;
+int commaIndex = 0;
+int commaParameters = 0;
+foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
+    commaParameters++;
+}
+foreach (ColumnSchema column in SourceTable.NonPrimaryKeyColumns) {
+    if (!column.AllowDBNull) {   
+        commaParameters++;
+    }    
+}
+foreach (ColumnSchema column in SourceTable.NonPrimaryKeyColumns) {
+    if (column.AllowDBNull) {   
+        commaParameters++;
+    }    
+}
+%>
+using EasyLOB.Data;
+using System.Collections.Generic;
+
+namespace <%= Namespace %>
+{
+    public partial class <%= className %>
+    {
+        #region Dictionaries
+
+        public static IZDataProfile DataProfile
+        {
+            get
+            {
+                return new ZDataProfile
+                {
+                    Class = new ZClassProfile
+                    (
+                        Name: "<%= className %>",
+                        IsIdentity: <%= isIdentity %>,
+                        Keys: new string[] { <%= keys %> },
+                        Lookup: "<%= lookupProperty %>",
+<%  if (SourceTable.ForeignKeys.Count == 0) { %>
+                        Associations: new string[] { },
+<%  } else { %>
+                        Associations: new string[]
+                        {
+<%      comma = ",";
+        commaIndex = 1;
+        foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
+            string fkClassName = ClassName(fkTable.ForeignKeyTable.FullName, Culture);
+            ColumnSchema fkColumn = fkTable.ForeignKeyMemberColumns[0];
+            string fkPropertyName = PropertyName(fkColumn.Name);
+            
+            string pkClassName = ClassName(fkTable.PrimaryKeyTable.FullName, Culture);
+            ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
+            string pkPropertyName = PropertyName(pkColumn.Name);
+    
+            string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName; %>                        
+                            "<%= pkClassPropertyName %>"<%= comma %>
+<%          if (++commaIndex >= SourceTable.ForeignKeys.Count) {
+                comma = "";
+            }
+        } %>
+                        },
+<%  } %>
+<%  if (SourceTable.PrimaryKeys.Count == 0) { %>
+                        CollectionsDictionary: new Dictionary<string, bool> { },
+<%  } else { %>
+                        CollectionsDictionary: new Dictionary<string, bool>
+                        {
+<%      comma = ",";
+        commaIndex = 1;
+        foreach (TableKeySchema primaryKey in SourceTable.PrimaryKeys) {
+            string pkClassName = ClassName(primaryKey.ForeignKeyTable.Name, Culture); %>                        
+                            { "<%= Plural(pkClassName, Culture) %>", true }<%= comma %>
+<%          if (++commaIndex >= SourceTable.PrimaryKeys.Count) {
+                comma = "";
+            }
+        } %>
+                        },
+<%  } %>
+                        LINQOrderBy: "<%= lookupProperty %>",
+                        LINQWhere: "<%= keyLinq %>"
+                    ),
+                    Properties = new List<IZPropertyProfile>
+                    {
+                        //                   Grd    Grd    Grd  Edt    Edt    Edt
+                        //                   Vis    Src    Wdt  Vis    RO     CSS         Name
+<%  int gridVisibles = 0;
+    int columns = 0;
+    comma = ",";
+    foreach (ColumnSchema column in SourceTable.Columns) {
+        if (++columns >= SourceTable.Columns.Count){
+            comma = "";
+        }
+        bool columnIsPrimaryKey = column.IsPrimaryKeyMember;
+        bool columnIsForeignKey = column.IsForeignKeyMember;
+        // gridVisible
+        string gridVisible;
+        if (columnIsPrimaryKey) {
+            if (SourceTable.PrimaryKey.MemberColumns.Count == SourceTable.Columns.Count) {
+                gridVisible = "true ";
+            } else {            
+                gridVisible = "false";
+            }
+        } else if (columnIsForeignKey) {
+            gridVisible = "false";
+        } else if (gridVisibles >= 2) {
+            gridVisible = "false";
+        } else {
+            gridVisibles++;
+            gridVisible = "true ";
+        }   
+        // gridSearch
+        string gridSearch;
+        if (columnIsPrimaryKey) {
+            gridSearch = "true ";
+        } else if (columnIsForeignKey) {
+            gridSearch = "false";
+        } else if (IsString(column.DataType)) {
+            gridSearch = "true ";
+        } else {
+            gridSearch = "false";
+        }
+        //
+        string gridWidth = GridWidth(column).Replace("px", "").PadLeft(3);
+        string editVisible = column.IsPrimaryKeyMember ? "false" : "true ";
+        string editReadOnly = "false";
+        string editWidthCSS = BootstrapWidth(column);
+        string fkTable = FKTableName(SourceTable, column).Replace("dbo.", ""); %>
+                        new ZPropertyProfile(<%= gridVisible %>, <%= gridSearch %>, <%= gridWidth %>, <%= editVisible %>, <%= editReadOnly %>, "<%= editWidthCSS %>", "<%= PropertyName(column.Name) %>")<%= columnIsForeignKey ? "," : comma %>
+<%      if (columnIsForeignKey) { %>                        
+                        new ZPropertyProfile(true , true , 200, false, false, "col-md-4", "<%= fkTable %>LookupText")<%= comma %>
+<%      }
+    } %>
+                    }
+                };
+            }
+        }
+
+        #endregion Dictionaries
+    }
+}

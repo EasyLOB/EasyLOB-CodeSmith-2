@@ -1,0 +1,44 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+
+<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+using EasyLOB.Persistence;
+using EasyLOB.Security;
+
+namespace <%= Namespace %>
+{
+    public class <%= Database %>UnitOfWorkNH : UnitOfWorkNH, I<%= Database %>UnitOfWork
+    {
+        #region Methods
+        
+        public <%= Database %>UnitOfWorkNH(IAuthenticationManager authenticationManager)
+            : base(<%= Database %>Factory.Session, authenticationManager)
+        {
+            Domain = "<%= Database %>";
+
+            //ISession session = base.Session;
+        }
+
+        public override IGenericRepository<TEntity> GetRepository<TEntity>()
+        {
+            if (!Repositories.Keys.Contains(typeof(TEntity)))
+            {
+                var repository = new <%= Database %>GenericRepositoryNH<TEntity>(this);
+                Repositories.Add(typeof(TEntity), repository);
+            }
+
+            return Repositories[typeof(TEntity)] as IGenericRepository<TEntity>;
+        }
+        
+        #endregion Methods        
+    }
+}
+

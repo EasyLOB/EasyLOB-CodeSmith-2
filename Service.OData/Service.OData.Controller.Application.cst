@@ -1,0 +1,210 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Archetype" Type="XCodeSmith.Archetypes" Category="Context" Description="Controllers Archetype" %>
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+
+<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Database" Description="Table" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>        
+<%@ Import Namespace="System.Data" %>
+<%
+if (SourceTable.PrimaryKey == null) {
+    throw new ApplicationException("SourceTable does not contain a primary key.");
+}
+      
+string tableName = TableName(SourceTable.FullName);
+string className = ClassName(SourceTable.FullName, Culture);
+string objectName = ObjectName(SourceTable.FullName, Culture);
+
+string classNamePlural = Plural(className, Culture);
+string objectNamePlural = Plural(objectName, Culture);
+
+string pkParameters = ""; // int? parameter1, string parameter2, ...
+string pkParametersArray = ""; // parameter1, parameter2, ...
+string pkParametersUrl = ""; // {parameter1}/{parameter2}/ ...
+string pkParametersNotEqual = ""; // parameters1 != Class.Property1 || parameters2 != Class.Property2 || ...
+string pkPropertiesArray = ""; // new object[] { object.Class.Property1, object.Property2, ... };
+foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
+    pkParameters += (pkParameters == "" ? "" : ", ") + GetType(column.DataType, false) + " " + LocalName(column.Name);
+    pkParametersArray += (pkParametersArray == "" ? "" : ", ") + LocalName(column.Name);
+    pkParametersUrl += (pkParametersUrl == "" ? "" : "/") + "{" + LocalName(column.Name) + "}";
+    pkParametersNotEqual += (pkParametersNotEqual == "" ? "" : " || ") + LocalName(PropertyName(column.Name)) + " == null";
+    pkPropertiesArray += (pkPropertiesArray == "" ? "" : ", ") + objectName + "DTO." + PropertyName(column.Name);
+}
+%>
+using <%= Database %>.Application;
+using <%= Database %>.Data;
+using EasyLOB.Library;
+using EasyLOB.Library.WebApi;
+using System;
+using System.Linq;
+using System.Net;
+using System.Web.Http;
+using System.Web.OData;
+using System.Web.OData.Query;
+
+namespace <%= Namespace %>
+{
+    public class <%= className %>Controller : BaseODataControllerApplication<<%= className %>DTO, <%= className %>>
+    {
+        #region Methods
+
+        public <%= className %>Controller(IChinookGenericApplicationDTO<<%= className %>DTO, <%= className %>> application)
+            : base("<%= className %>")
+        {
+            Application = application;
+
+        }
+
+        // GET: /<%= className %>?$...
+        [HttpGet]
+        public IQueryable<<%= className %>DTO> Get(ODataQueryOptions queryOptions)
+        {
+            IQueryable query = null;
+
+            try
+            {
+                if (IsSearch(OperationResult))
+                {
+                    var settings = new ODataValidationSettings()
+                    {
+                        AllowedFunctions = AllowedFunctions.AllMathFunctions
+                    };
+                    queryOptions.Validate(settings);
+
+                    query = queryOptions.ApplyTo(Application.QueryDTO);
+
+                    return query as IQueryable<<%= className %>DTO>;
+                }
+            }
+            catch (Exception exception)
+            {
+                OperationResult.ParseException(exception);
+            }
+
+            throw ODataHelper.OperationResultResponseException(Request, OperationResult);
+        }
+
+        // PUT: /<%= className %>(1)
+        [HttpPut]
+        public IHttpActionResult Put([FromODataUri] int key, <%= className %>DTO <%= objectName %>)
+        {
+            try
+            {
+                if (IsUpdate(OperationResult))
+                {
+                    if (ValidateModelState(OperationResult))
+                    {
+                        Application.Update(OperationResult, <%= objectName %>);
+
+                        return Updated(<%= objectName %>);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                OperationResult.ParseException(exception);
+            }
+
+            throw ODataHelper.OperationResultResponseException(Request, OperationResult);
+        }
+
+        // POST: /<%= className %>
+        [HttpPost]
+        public IHttpActionResult Post(<%= className %>DTO <%= objectName %>)
+        {
+            try
+            {
+                if (IsCreate(OperationResult))
+                {
+                    if (ValidateModelState(OperationResult))
+                    {
+                        Application.Create(OperationResult, <%= objectName %>);
+
+                        return Created(<%= objectName %>);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                OperationResult.ParseException(exception);
+            }
+
+            throw ODataHelper.OperationResultResponseException(Request, OperationResult);
+        }
+
+        // PATCH: /<%= className %>(1)
+        [AcceptVerbs("PATCH", "MERGE")]
+        public IHttpActionResult Patch([FromODataUri] int key, Delta<<%= className %>DTO> patch)
+        {
+            <%= className %>DTO <%= objectName %>DTO = null;
+
+            try
+            {
+                if (IsUpdate(OperationResult))
+                {
+                    if (ValidateModelState(OperationResult))
+                    {
+                        <%= className %> <%= objectName %> = Application.UnitOfWork.GetRepository<<%= className %>>().GetById(key);
+                        if (<%= objectName %> != null)
+                        {
+                            <%= objectName %>DTO = new <%= className %>DTO(<%= objectName %>);
+                            patch.Patch(<%= objectName %>DTO);
+                            LibraryHelper.Clone<<%= className %>>((<%= className %>)<%= objectName %>DTO.ToData(), <%= objectName %>, null);
+
+                            Application.UnitOfWork.Save(OperationResult);
+
+                            return Updated(<%= objectName %>DTO);
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                OperationResult.ParseException(exception);
+            }
+
+            throw ODataHelper.OperationResultResponseException(Request, OperationResult);
+        }
+
+        // DELETE: /<%= className %>(1)
+        [HttpDelete]
+        public IHttpActionResult Delete([FromODataUri] int key)
+        {
+            try
+            {
+                if (IsDelete(OperationResult))
+                {
+                    <%= className %> <%= objectName %> = Application.UnitOfWork.GetRepository<<%= className %>>().GetById(key);
+                    if (<%= objectName %> != null)
+                    {
+                        Application.Delete(OperationResult, new <%= className %>DTO(<%= objectName %>));
+
+                        return StatusCode(HttpStatusCode.NoContent);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                OperationResult.ParseException(exception);
+            }
+
+            throw ODataHelper.OperationResultResponseException(Request, OperationResult);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                //?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #endregion Methods
+    }
+}

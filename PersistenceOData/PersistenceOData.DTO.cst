@@ -1,0 +1,272 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+
+<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Database" Description="Table" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%
+
+// Associations (FK) => Relationships FK
+// Collections (PK)  => Relationships PK
+
+if (SourceTable.PrimaryKey == null) {
+    throw new ApplicationException("SourceTable does not contain a primary key.");
+}
+
+string tableName = TableName(SourceTable.FullName);
+string className = ClassName(SourceTable.FullName, Culture);
+string objectName = ObjectName(SourceTable.FullName, Culture);
+
+// LookupProperty
+//   2nd property, or 1st if there is no 2nd property
+//   1st string property
+
+string lookupProperty = PropertyName((SourceTable.Columns.Count >= 2) ? SourceTable.Columns[1].Name : SourceTable.Columns[0].Name);
+foreach (ColumnSchema column in SourceTable.Columns) {
+    // First String non-primary-key column
+    if (!column.IsPrimaryKeyMember && IsString(column.DataType))    
+    {
+        // First 
+        lookupProperty = PropertyName(column.Name);
+        break;
+    }
+}
+
+// Associations
+
+string associations = "";
+string associationKeys = "";
+foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
+    string fkClassName = ClassName(fkTable.ForeignKeyTable.FullName, Culture);
+    ColumnSchema fkColumn = fkTable.ForeignKeyMemberColumns[0];
+    string fkPropertyName = PropertyName(fkColumn.Name);
+    
+    string pkClassName = ClassName(fkTable.PrimaryKeyTable.FullName, Culture);            
+    ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
+    string pkPropertyName = PropertyName(pkColumn.Name);
+    
+    string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+    
+    associations += (associations == "" ? " " : ", ") + "\"" + pkClassPropertyName + "\"";
+
+    string associationKey = "";
+    foreach(ColumnSchema column in fkTable.PrimaryKeyMemberColumns)
+    {
+        associationKey += (associationKey == "" ? "" : ", ") + "\"" + PropertyName(column.Name) + "\"";
+    }
+    associationKeys += (associationKeys == "" ? " " : ", ") + "new string[] { " + associationKey + " }";
+}
+
+// Collections
+
+string collections = "";
+string collectionKeys = "";
+foreach (TableKeySchema primaryKey in SourceTable.PrimaryKeys) {
+    string pkClassName = ClassName(primaryKey.ForeignKeyTable.Name, Culture);
+    collections += (collections == "" ? " " : ", ") + "\"" + Plural(pkClassName, Culture) + "\"";
+    
+    string collectionKey = "";
+    foreach (ColumnSchema column in primaryKey.PrimaryKeyMemberColumns) {
+        collectionKey += (collectionKey == "" ? " " : ", ") + "\"" + column.Name + "\"";
+    }    
+    collectionKeys += (collectionKeys == "" ? " " : ", ") + "new string[] { " + collectionKey + " }";
+}
+
+// IsIdentity
+
+string isIdentity = IsIdentity(SourceTable.PrimaryKey.MemberColumns[0]) ? "true" : "false";
+
+// KeyProperties
+
+string keys = "";
+string keyParameters = "";
+string keyLinq = "";
+string keyCommas = "";
+string keyIds = "";
+int linq = 0;
+foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
+    keys += (keys == "" ? "" : ", ") + "\"" + PropertyName(column.Name) + "\"";
+    keyParameters += (keyParameters == "" ? "" : ", ") + GetType(column.DataType, column.AllowDBNull) + " " + ObjectName(column.Name, Culture);
+    keyCommas += (keyCommas == "" ? "" : ", ") + PropertyName(column.Name);
+    keyLinq += (keyLinq == "" ? "" : " && ") + PropertyName(column.Name) + " == @" + linq.ToString();
+    keyIds += (keyIds == "" ? "" : ", ") + "(" + GetType(column.DataType, false) + ")ids[" + linq.ToString() + "]";
+    linq++;
+}
+
+// OrderByExpression
+//   2nd property, or 1st if there is no 2nd property
+//   1st string property
+
+string orderByExpression = PropertyName((SourceTable.Columns.Count >= 2) ? SourceTable.Columns[1].Name : SourceTable.Columns[0].Name);
+foreach (ColumnSchema column in SourceTable.Columns) {
+    // First String non-primary-key column
+    if (!column.IsPrimaryKeyMember && IsString(column.DataType))    
+    {
+        // First 
+        orderByExpression = PropertyName(column.Name);
+        break;
+    }
+}
+
+// NHibernate
+
+bool isNHibernate = true;
+string pkEquals = ""; // property1 == object.Property1 && ..
+string pkHashCode = ""; // Property1.ToString() + "|" + ...
+foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
+    pkEquals += (pkEquals == "" ? "" : " && ") + PropertyName(column.Name) + " == " + objectName + "." + PropertyName(column.Name);
+    pkHashCode += (pkHashCode == "" ? "" : " + \"|\" + ") + PropertyName(column.Name) + ".ToString()";
+}
+
+string comma;
+int commaIndex = 0;
+int commaParameters = 0;
+foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
+    commaParameters++;
+}
+foreach (ColumnSchema column in SourceTable.NonPrimaryKeyColumns) {
+    if (!column.AllowDBNull) {   
+        commaParameters++;
+    }    
+}
+foreach (ColumnSchema column in SourceTable.NonPrimaryKeyColumns) {
+    if (column.AllowDBNull) {   
+        commaParameters++;
+    }    
+}
+%>
+using EasyLOB.Data;
+using EasyLOB.Library;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+<% if (SourceTable.PrimaryKey.MemberColumns.Count > 1) { %>
+using System.ComponentModel.DataAnnotations.Schema;
+<% } %>
+using System.Linq;
+
+namespace <%= Namespace.Replace(".Persistence", ".Data") %>
+{    
+    [MetadataType(typeof(<%= className %>DTOMetadata))]    
+    public partial class <%= className %>DTO : <%= Database %>.Persistence.<%= Database %>.Data.<%= className %>DTO, IZDTOBase<<%= className %>DTO, <%= className %>>
+    {
+        #region Methods
+
+        public <%= className %>DTO()
+        {
+        }
+
+        public <%= className %>DTO(IZDataBase data)
+        {
+            FromData(data);
+        }
+
+        #endregion Methods
+        
+        #region Methods IZDTOBase
+        
+        public Func<<%= className %>DTO, <%= className %>> GetDataSelector()
+        {
+            return x => new <%= className %>
+            {
+<%  comma = ",";
+    commaIndex = 0;
+    foreach (ColumnSchema column in SourceTable.Columns) {
+        bool isNullable = column.AllowDBNull;
+        if (++commaIndex >= SourceTable.Columns.Count) {
+            comma = "";
+        }        
+        if (IsDateTime(column.DataType) && isNullable) { %>
+                <%= PropertyName(column.Name) %> = x.<%= PropertyName(column.Name) %>.GetValueOrDefault().UtcDateTime<%= comma %>
+<%      } else if (IsDateTime(column.DataType)) { %>
+                <%= PropertyName(column.Name) %> = x.<%= PropertyName(column.Name) %>.UtcDateTime<%= comma %>
+<%      } else { %>
+                <%= PropertyName(column.Name) %> = x.<%= PropertyName(column.Name) %><%= comma %>
+<%      }
+    } %>
+            };
+        }
+
+        public Func<<%= className %>, <%= className %>DTO> GetDTOSelector()
+        {
+            return x => new <%= className %>DTO
+            {
+<%  comma = ",";
+    commaIndex = 0;
+    foreach (ColumnSchema column in SourceTable.Columns) {
+        if (++commaIndex >= SourceTable.Columns.Count + SourceTable.ForeignKeys.Count) {
+            comma = "";
+        } %>
+                <%= PropertyName(column.Name) %> = x.<%= PropertyName(column.Name) %><%= comma %>
+<%  }
+    
+    if (SourceTable.ForeignKeys.Count > 0) {
+        foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
+            string fkClassName = ClassName(fkTable.ForeignKeyTable.FullName, Culture);
+            ColumnSchema fkColumn = fkTable.ForeignKeyMemberColumns[0];
+            string fkPropertyName = PropertyName(fkColumn.Name);
+            
+            string pkClassName = ClassName(fkTable.PrimaryKeyTable.FullName, Culture);            
+            ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
+            string pkPropertyName = PropertyName(pkColumn.Name);
+            
+            //string pkClassPropertyName = pkClassName;
+            string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+
+            if (++commaIndex >= SourceTable.Columns.Count + SourceTable.ForeignKeys.Count) {
+                comma = "";
+            } %>
+                <%= pkClassName %>LookupText = x.<%= pkClassPropertyName %> == null ? "" : x.<%= pkClassPropertyName %>.LookupText<%= comma %>
+<%          //<= pkClassPropertyName >LookupText = <= objectName >.<= pkClassPropertyName > == null ? "" : <= objectName >.<= pkClassPropertyName >.LookupText;
+        }
+    } %>
+            };
+        }
+
+        public void FromData(IZDataBase data)
+        {
+            <%= className %>DTO dto = (new List<<%= className %>> { (<%= className %>)data })
+                .Select(GetDTOSelector())
+                .FirstOrDefault();
+            LibraryHelper.Clone(dto, this);
+        }
+
+        public IZDataBase ToData()
+        {
+            return (new List<<%= className %>DTO> { this })
+                .Select(GetDataSelector())
+                .FirstOrDefault();
+        }
+
+        #endregion Methods IZDTOBase
+    }
+
+    public partial class <%= className %>DTOMetadata
+    {
+        #region Properties
+
+<%  int order = 0;
+    foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
+        bool columnIsPrimaryKey = column.IsPrimaryKeyMember;
+        bool columnIsIdentity = IsIdentity(SourceTable.PrimaryKey.MemberColumns[0]);
+        bool columnIsNullable = column.AllowDBNull;
+        bool isNullable = column.AllowDBNull;
+        
+        if (SourceTable.PrimaryKey.MemberColumns.Count == 1) { %>
+        [Key]
+        public virtual <%= GetType(column.DataType, isNullable) %> <%= PropertyName(column.Name) %> { get; set; }
+<%      } else { %>        
+        [Key, Column(Order = <%= order++.ToString() %>)]
+        public virtual <%= GetType(column.DataType, isNullable) %> <%= PropertyName(column.Name) %> { get; set; }
+<%      }
+    } %>
+
+        #endregion Properties
+    }    
+}

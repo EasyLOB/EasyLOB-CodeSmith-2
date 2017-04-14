@@ -1,0 +1,64 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Archetype" Type="XCodeSmith.Archetypes" Category="Context" Description="Controllers Archetype" %>
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+<%@ Property Name="Output" Type="String" Category="Context" Description="Output Directory" %>
+
+<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
+
+<%@ Property Name="DoPresentationModelCollection" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: Collection Models ?" %>
+<%@ Property Name="DoPresentationModelItem" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: Item Models ?" %>
+<%@ Property Name="DoPresentationModelView" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: View Models ?" %>
+<%@ Property Name="DoPresentationMvcController" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Controllers ?" %>
+<%@ Property Name="DoPresentationMvcPartialViewCollection" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Partial View Collection ?" %>
+<%@ Property Name="DoPresentationMvcPartialViewItem" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Partial View Item ?" %>
+<%@ Property Name="DoPresentationMvcPartialViewLookup" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Partial View Lookup ?" %>
+<%@ Property Name="DoPresentationMvcView" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Views ?" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%
+if (DoPresentationMvcController)
+{
+    GeneratePresentationMvcController(SourceTables, Namespace, Database, Output, Culture, Archetype);
+}
+
+if (DoPresentationModelCollection)
+{
+    GeneratePresentationCollectionModel(SourceTables, Namespace, Database, Output, Culture);
+}
+
+if (DoPresentationModelItem)
+{
+    GeneratePresentationItemModel(SourceTables, Namespace, Database, Output, Culture);
+}
+
+if (DoPresentationModelView)
+{
+    GeneratePresentationViewModel(SourceTables, Namespace, Database, Output, Culture);
+}
+
+if (DoPresentationMvcPartialViewCollection)
+{
+    GeneratePresentationMvcPartialViewCollection(SourceTables, Namespace, Database, Output, Culture);
+}
+
+if (DoPresentationMvcPartialViewItem)
+{
+    GeneratePresentationMvcPartialViewItem(SourceTables, Namespace, Database, Output, Culture);
+}
+
+if (DoPresentationMvcPartialViewLookup)
+{
+    GeneratePresentationMvcPartialViewLookup(SourceTables, Namespace, Database, Output, Culture);
+}
+
+if (DoPresentationMvcView)
+{
+    GeneratePresentationMvcView(SourceTables, Namespace, Database, Output, Culture);
+}
+%>

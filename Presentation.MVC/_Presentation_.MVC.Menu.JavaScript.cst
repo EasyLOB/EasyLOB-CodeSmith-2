@@ -1,0 +1,49 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
+<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+        @Html.EJ().Menu("MyMenu").Items(items =>
+        {
+            items.Add().Url(@Url.Content("~/Home")).Id("Home").Text("Home");                        
+            items.Add().Url(@Url.Content("~/Home/About")).Id("About").Text(MenuResources.About);
+            items.Add().Url(@Url.Content("~/Home/Contact")).Id("Contact").Text(MenuResources.Contact);
+            items.Add().Url("").Id("<%= Database %>").Text("<%= Database %>").Children(child =>
+            {
+<%  foreach (TableSchema table in SourceTables) { %>
+                child.Add().Url(@Url.Content("~/<%= ClassName(table.Name, Culture) %>")).Text(<%= ClassName(table.Name, Culture) %>Resources.EntityPlural);
+<%  } %>
+            });
+            items.Add().Url("").Text(AuditTrailResources.AuditTrail).Children(child =>
+            {
+                child.Add().Url(@Url.Content("~/AuditTrailConfiguration")).Text(AuditTrailConfigurationResources.EntityPlural);
+                child.Add().Url(@Url.Content("~/AuditTrailLog")).Text(AuditTrailLogResources.EntityPlural);
+            });
+            items.Add().Url("").Text(SecurityResources.Security).Children(child =>
+            {
+                child.Add().Url(@Url.Content("~/Role")).Text(RoleResources.EntityPlural);
+                child.Add().Url(@Url.Content("~/User")).Text(UserResources.EntityPlural);
+                child.Add().Url(@Url.Content("~/UserRole")).Text(":: " + UserRoleResources.EntityPlural);
+                @*
+                child.Add().Url(@Url.Content("~/UserClaim")).Text(UserClaimResources.EntityPlural);
+                child.Add().Url(@Url.Content("~/UserLogin")).Text(UserLoginResources.EntityPlural);
+                *@
+            });
+            items.Add().Url("").Text(SecurityIdentityResources.Identity).Children(child =>
+            {
+                child.Add().Url(@Url.Content("~/Account/Logout")).Text(AccountResources.LogOut);
+                child.Add().Url(@Url.Content("~/Manage/ChangePassword")).Text(ManageResources.ChangePassword);
+            });
+            items.Add().Url("").Text(MenuResources.Globalization).Children(child =>
+            {
+                child.Add().Url(@Url.Content("~/Globalization/Culture?language=en&locale=US")).Text("English {en-US}");
+                child.Add().Url(@Url.Content("~/Globalization/Culture?language=pt&locale=BR")).Text("Portugu?s {pt-BR}");
+            });
+        })
+

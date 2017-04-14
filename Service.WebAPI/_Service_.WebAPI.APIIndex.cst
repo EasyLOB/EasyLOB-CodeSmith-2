@@ -1,0 +1,36 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
+<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+@*
+
+    /Controllers/HomeController.cs
+
+    public ActionResult WebApiIndex()
+    {
+        ViewBag.Title = "Web API Index";
+
+        return View();
+    }
+
+    /View/Home/WebApiIndex.cshtml
+
+*@
+
+<br />
+<%= Database %><br />
+<%  foreach (TableSchema table in SourceTables) {
+        string className = ClassName(table.Name, Culture);
+        string objectName = ObjectName(table.Name, Culture); %>
+<br />
+<%= className %><br />
+<a href="@Url.Content("/api/<%= objectName %>api")">api/<%= objectName %>api</a><br />
+<a href="@Url.Content("/api/<%= objectName %>api/1")">api/<%= objectName %>api/1</a><br />
+<%  } %>

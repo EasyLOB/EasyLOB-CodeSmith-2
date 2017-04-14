@@ -1,0 +1,358 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+
+<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Database" Description="Table" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%
+if (SourceTable.PrimaryKey == null) {
+    throw new ApplicationException("SourceTable does not contain a primary key.");
+}
+      
+string tableName = TableName(SourceTable.FullName);
+string className = ClassName(SourceTable.FullName, Culture);
+string objectName = ObjectName(SourceTable.FullName, Culture);
+
+string pkUrl = ""; // Property1=String(data.Property1), Property2=String(data.Property2), ...
+foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
+    pkUrl += (pkUrl == "" ? "" : " + \"&") + PropertyName(column.Name) + "=\" + String(data." + PropertyName(column.Name) + ")";
+}
+%>
+@model <%= className %>CollectionModel
+
+@{
+    string CSHTML = "_<%= className %>Collection.cshtml";
+    string pageTitle = <%= className %>Resources.EntityPlural;
+    string documentTitle = AppHelper.DocumentTitle(pageTitle);
+    string query = "";
+<%  string ifElse = "if";
+    foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
+        string fkClassName = ClassName(fkTable.ForeignKeyTable.FullName, Culture);
+        ColumnSchema fkColumn = fkTable.ForeignKeyMemberColumns[0];
+        string fkPropertyName = PropertyName(fkColumn.Name);
+            
+        string pkClassName = ClassName(fkTable.PrimaryKeyTable.FullName, Culture);
+        ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
+        string pkPropertyName = PropertyName(pkColumn.Name);
+        pkPropertyName = pkPropertyName == className ? pkPropertyName + fkPropertyName : pkPropertyName; %>
+    <%= ifElse %> (Model.Master<%= fkPropertyName %> != null)
+    {
+<%      if (IsString(fkColumn.DataType)) { %>                
+        query = String.Format("ej.Query().where(\"<%= fkPropertyName %>\", ej.FilterOperators.equal, \"{0}\")", Model.Master<%= fkPropertyName %>);
+<%      } else { %>                    
+        query = String.Format("ej.Query().where(\"<%= fkPropertyName %>\", ej.FilterOperators.equal, {0})", Model.Master<%= fkPropertyName %>);
+<%      }
+        ifElse = "}\r\n    else if";
+    } %>
+<%  if (SourceTable.ForeignKeys.Count > 0) { %>
+    }
+<%  } %>}
+
+<div id="Collection_<%= className %>_Title">
+    <h4>@pageTitle</h4>
+</div>
+
+<div id="Collection_<%= className %>">
+    @(Html.EJ().Grid<<%= className %>>("Grid_<%= className %>")
+        //.Datasource(datasource => datasource
+        //    .Adaptor(AdaptorType.UrlAdaptor)
+        //    .URL(Url.Action("DataSource", "<%= className %>"))
+        //)
+        .Query(query)        
+        .AllowFiltering()
+        .AllowGrouping()
+        .AllowPaging()
+        .AllowReordering()
+        .AllowResizeToFit()
+        .AllowResizing()
+        //.AllowScrolling()
+        .AllowSearching()
+        .AllowSorting()
+        .AllowTextWrap()
+        .TextWrapSettings(wrap =>
+        {
+            wrap.WrapMode(WrapMode.Both);
+        })                    
+        .ClientSideEvents(clientEvent => clientEvent
+            .ActionBegin("actionBegin_Grid_<%= className %>")
+            .ActionFailure("actionFailure_Grid_<%= className %>")
+            .Load("load_Grid_<%= className %>")
+            .ToolbarClick("toolbarClick_Grid_<%= className %>")
+        )
+        .Columns(column =>
+        {
+<%  int visibles = 0;
+    string visible = "true";
+    foreach (ColumnSchema column in SourceTable.Columns) {
+        bool columnIsPrimaryKey = column.IsPrimaryKeyMember;
+        bool columnIsForeignKey = column.IsForeignKeyMember;
+        bool columnIsIdentity = IsIdentity(column);
+        bool columnIsNullable = column.AllowDBNull;
+        
+        if (columnIsPrimaryKey) {
+            if (SourceTable.PrimaryKey.MemberColumns.Count == SourceTable.Columns.Count) {
+                visible = "true";
+            } else {            
+                visible = "false";
+            }
+        } else if (columnIsForeignKey) {
+            visible = "false";
+        } else if (visibles >= 1) {
+            visible = "false";
+        } else {
+            visibles++;
+            visible = "true";
+        }
+        %>
+            column.Field("<%= PropertyName(column.Name) %>")<%
+        if (columnIsIdentity) { %>
+                .AllowEditing(false)<%
+        }
+        if (IsDate(column.DataType)) { %>
+                .EditType(EditingType.Datepicker)
+                .Format(SyncfusionPatternResources.GridFormat_Date)<%
+        } else if (IsTime(column.DataType)) { %>
+                .EditType(EditingType.DateTimePicker)
+                .Format(SyncfusionPatternResources.GridFormat_Time)<%
+        } else if (IsDateTime(column.DataType)) { %>
+                .EditType(EditingType.DateTimePicker)
+                .Format(SyncfusionPatternResources.GridFormat_DateTime)<%
+        } else if (IsDecimal(column.DataType) || IsFloat(column.DataType) || IsInteger(column.DataType)) { %>
+                .EditType(EditingType.Numeric)<%
+            if (IsDecimal(column.DataType) || IsFloat(column.DataType)) { %>
+                .Format(SyncfusionPatternResources.GridFormat_Float)<%
+            } else { %>
+                .Format(SyncfusionPatternResources.GridFormat_Integer)<%
+            }
+        } else { %>
+                .EditType(EditingType.String)<%
+        } %>
+                .HeaderText(<%= className %>Resources.Property<%= PropertyName(column.Name) %>)<%
+        if (columnIsIdentity) { %>
+                .IsIdentity(true)<%
+        }
+        if (columnIsPrimaryKey) { %>
+                .IsPrimaryKey(true)<%
+        }
+        if (IsDecimal(column.DataType) || IsFloat(column.DataType) || IsInteger(column.DataType)) { %>
+                .TextAlign(TextAlign.Right)<%
+        } %>
+                .Visible(<%= className %>.DataProfile.IsGridVisibleFor("<%= PropertyName(column.Name) %>"))
+                //.Width(<%= className %>.DataProfile.GridWidthFor("<%= PropertyName(column.Name) %>"))
+                .Add();
+<%      if (columnIsForeignKey) {
+            foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
+                if (fkTable.ForeignKeyMemberColumns[0].Name == column.Name) { %>
+            column.Field("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText")
+                .AllowEditing(false)
+                .HeaderText(<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>Resources.EntitySingular)
+                .Visible(<%= className %>.DataProfile.IsGridVisibleFor("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText"))
+                //.Width(<%= className %>.DataProfile.GridWidthFor("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText"))
+                .Add();
+<%              }
+            }
+        }
+    } %>    
+        })
+        .EditSettings(edit => edit
+            .AllowAdding()
+            .AllowDeleting()
+            .AllowEditing()
+            .AllowEditOnDblClick(false)
+        )
+        .EnablePersistence()
+        .IsResponsive()
+        .FilterSettings(filter => filter
+            .EnableCaseSensitivity(false)
+            .FilterType(FilterType.Excel)
+            .MaxFilterChoices(AppDefaults.SyncfusionRecordsForFiltering)
+        )
+        .Mappers(map => map
+            .ExportToExcelAction(Url.Content("~/<%= className %>/ExportToExcel"))
+            .ExportToPdfAction(Url.Content("~/<%= className %>/ExportToPdf"))
+            .ExportToWordAction(Url.Content("~/<%= className %>/ExportToWord"))
+        )
+        .PageSettings(page => page
+            .PageSize(AppDefaults.SyncfusionRecordsByPage)
+        )
+        @*
+        .SearchSettings(search =>
+        {
+            search.Fields(field =>
+            {
+<%  visible = "";
+    foreach (ColumnSchema column in SourceTable.Columns) {
+        bool columnIsPrimaryKey = column.IsPrimaryKeyMember;
+        bool columnIsForeignKey = column.IsForeignKeyMember;
+        
+        if (columnIsPrimaryKey) {
+            visible = "";
+        } else if (columnIsForeignKey) {
+            visible = "//";
+        } else if (IsString(column.DataType)) {
+            visible = "";
+        } else {
+            visible = "//";
+        }
+        %>
+                <%= visible %>field.Add("<%= PropertyName(column.Name) %>");
+<%      if (columnIsForeignKey) {
+            foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
+                if (fkTable.ForeignKeyMemberColumns[0].Name == column.Name) { %>
+                field.Add("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText");
+<%              }
+            }
+        }
+    } %>
+            });
+        })
+        *@
+        .ShowColumnChooser()
+        .ToolbarSettings(toolbar => toolbar
+            .CustomToolbarItems(new List<object>() {
+                new Syncfusion.JavaScript.Models.CustomToolbarItem() { TemplateID = "#Grid_<%= className %>_Toolbar" }
+            })
+            .ShowToolbar()
+            .ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Search);
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Delete);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PdfExport);
+                items.AddTool(ToolBarItems.WordExport);
+            })
+        )
+    )
+</div>
+
+<script type="text/x-jsrender" id="Grid_<%= className %>_Toolbar">
+    <div id="Grid_<%= className %>_Toolbar_Refresh" class="e-toolbaricons e-icon e-reload" title="@PresentationResources.Refresh"></div>
+    <div id="Grid_<%= className %>_Toolbar_Read" class="e-toolbaricons e-icon e-document" title="@PresentationResources.Read"></div>
+</script>
+
+<script>
+    $(function () {
+        try {
+            ej.widget.init($("#Collection_<%= className %>"));
+
+            var model = @Html.Raw(JsonConvert.SerializeObject(Model));
+            var dataProfile = @Html.Raw(JsonConvert.SerializeObject(<%= className %>.DataProfile));
+
+            zOnCollectionView(model, dataProfile, "@Html.Raw(documentTitle)", "@Url.Action("DataSource", "<%= className %>")");
+        } catch (exception) {
+            zAlert(zExceptionMessage("@CSHTML", "function", exception));
+        }                
+    });
+    
+    function actionBegin_Grid_<%= className %>(args) {
+        try {
+            var model = @Html.Raw(JsonConvert.SerializeObject(Model));
+            var masterControllerAction = model.MasterControllerAction == null ? "" : model.MasterControllerAction.toLowerCase();
+    
+            // Associations (FK)
+            var url = "";
+<%  foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
+        string fkClassName = ClassName(fkTable.ForeignKeyTable.FullName, Culture);
+        string fkPropertyName = PropertyName(fkTable.ForeignKeyMemberColumns[0].Name);
+        string pkClassName = ClassName(fkTable.PrimaryKeyTable.FullName, Culture);
+        string pkPropertyName = PropertyName(fkTable.PrimaryKeyMemberColumns[0].Name); %>
+            // <%= pkClassName %>
+            if (model.Master<%= fkPropertyName %> != null) {
+                url = url + (url == "" ? "" : "&") + "Master<%= fkPropertyName %>=" + String(model.Master<%= fkPropertyName %>);
+            }
+<%  } %>
+
+            if (masterControllerAction == "" || masterControllerAction == "update") {
+                switch(args.requestType) {
+                    case "add":
+                        // Create
+                        if (model.ActivityOperations.IsCreate) {
+                            $("#ZAjax").load("@(Url.Action("Create", "<%= className %>", null, Request.Url.Scheme))" +
+                                (url == "" ? "" : "?") + url, function (responseText, textStatus, jqXHR) { zAjaxLoadComplete(responseText, textStatus, jqXHR); });
+                        }
+                        break;
+                    case "read":
+                        // Read
+                        if (model.ActivityOperations.IsRead) {
+                            var data = args.data;
+                            if (!ej.isNullOrUndefined(data)) {
+                                $("#ZAjax").load("@(Url.Action("Read", "<%= className %>", null, Request.Url.Scheme))?<%= pkUrl %> +
+                                    (url == "" ? "" : "&") + url, function (responseText, textStatus, jqXHR) { zAjaxLoadComplete(responseText, textStatus, jqXHR); });
+                            }
+                        }
+                        break;                        
+                    case "beginedit":
+                        // Update
+                        if (model.ActivityOperations.IsUpdate) {
+                            var data = this.model.currentViewData[args.rowIndex];
+                            if (!ej.isNullOrUndefined(data)) {
+                                $("#ZAjax").load("@(Url.Action("Update", "<%= className %>", null, Request.Url.Scheme))?<%= pkUrl %> +
+                                    (url == "" ? "" : "&") + url, function (responseText, textStatus, jqXHR) { zAjaxLoadComplete(responseText, textStatus, jqXHR); });
+                            }
+                        }
+                        break;
+                    case "delete":
+                        // Delete
+                        if (model.ActivityOperations.IsDelete) {
+                            var data = args.data;
+                            if (!ej.isNullOrUndefined(data)) {
+                                $("#ZAjax").load("@(Url.Action("Delete", "<%= className %>", null, Request.Url.Scheme))?<%= pkUrl %> +
+                                    (url == "" ? "" : "&") + url, function (responseText, textStatus, jqXHR) { zAjaxLoadComplete(responseText, textStatus, jqXHR); });
+                            }
+                        }
+                        break;
+                }
+            }
+
+            if (args.requestType == "add" || args.requestType == "beginedit" || args.requestType == "delete") {
+                args.cancel = true;
+            }
+        } catch (exception) {
+            zAlert(zExceptionMessage("@CSHTML", "actionBegin_Grid_<%= className %>", exception));
+        }            
+    }
+    
+    function actionFailure_Grid_<%= className %>(args) {
+        try {
+            zAlert(args.error.responseText);
+        } catch (exception) {
+            zAlert(zExceptionMessage("@CSHTML", "actionFailure_Grid_<%= className %>", exception));
+        }
+    }    
+
+    function load_Grid_<%= className %>(args) {
+        try {            
+            var culture = "@System.Globalization.CultureInfo.CurrentCulture.Name";
+            this.model.locale = culture;
+        } catch (exception) {
+            zAlert(zExceptionMessage("@CSHTML", "load_Grid_<%= className %>", exception));
+        }
+    }
+
+    function toolbarClick_Grid_<%= className %>(sender) {
+        try {
+            var toolbar = $(sender.target);
+            var ejGrid = $("#Grid_<%= className %>").data("ejGrid");
+
+            if (toolbar.prop("id") == "Grid_<%= className %>_Toolbar_Refresh") {
+                ejGrid.refreshContent();
+            } else if (toolbar.prop("id") == "Grid_<%= className %>_Toolbar_Read") {
+                var records = ejGrid.getSelectedRecords();
+                if (records.length == 1) {
+                    var args = { requestType: "read", data: records[0] };
+                    actionBegin_Grid_<%= className %>(args)
+                }
+            }
+        } catch (exception) {
+            zAlert(zExceptionMessage("@CSHTML", "toolbarClick_Grid_<%= className %>", exception));
+        }
+    }
+</script>

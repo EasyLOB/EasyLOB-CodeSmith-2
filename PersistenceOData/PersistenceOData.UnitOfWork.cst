@@ -1,0 +1,46 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+
+<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+using <%= Namespace %>.Default;
+using EasyLOB.Library;
+using EasyLOB.Persistence;
+using EasyLOB.Security;
+using System;
+
+namespace <%= Namespace %>
+{
+    public class <%= Database %>UnitOfWorkOData : UnitOfWorkOData, I<%= Database %>UnitOfWorkDTO
+    {
+        #region Methods
+
+        public <%= Database %>UnitOfWorkOData(IAuthenticationManager authenticationManager)
+            : base(new Container(new Uri(ConfigurationHelper.AppSettings<string>("OData.<%= Database %>"))), authenticationManager)
+        {
+            Domain = "<%= Database %>";
+
+            //DataServiceContext container = (DataServiceContext)base.Container;
+        }
+
+        public override IGenericRepositoryDTO<TEntityDTO, TEntity> GetRepository<TEntityDTO, TEntity>()
+        {
+            if (!Repositories.Keys.Contains(typeof(TEntityDTO)))
+            {
+                var repository = new <%= Database %>GenericRepositoryOData<TEntityDTO, TEntity>(this);
+                Repositories.Add(typeof(TEntityDTO), repository);
+            }
+
+            return Repositories[typeof(TEntityDTO)] as IGenericRepositoryDTO<TEntityDTO, TEntity>;
+        }
+
+        #endregion Methods
+    }
+}
