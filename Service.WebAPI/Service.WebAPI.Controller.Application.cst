@@ -39,6 +39,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
 using <%= Database %>;
 using <%= Database %>.Application;
 using <%= Database %>.Data;
+using EasyLOB;
 using EasyLOB.Library.WebApi;
 using EasyLOB.WebApi;
 using System;
