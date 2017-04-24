@@ -166,7 +166,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
             .AllowEditing()
             .AllowEditOnDblClick(false)
         )
-        .EnablePersistence()
+        //.EnablePersistence()
         .IsResponsive()
         .FilterSettings(filter => filter
             .EnableCaseSensitivity(false)
@@ -272,6 +272,10 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
 
             if (masterControllerAction == "" || masterControllerAction == "update") {
                 switch(args.requestType) {
+                    case "searching":
+                        // Search
+                        zSearchDictionaryWrite("<%= className %>", args.keyValue);
+                        break;
                     case "add":
                         // Create
                         if (model.ActivityOperations.IsCreate) {
