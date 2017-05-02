@@ -175,11 +175,11 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
             .FilterType(FilterType.Excel)
             .MaxFilterChoices(AppDefaults.SyncfusionRecordsForFiltering)
         )
-        .Mappers(map => map
-            .ExportToExcelAction(Url.Content("~/<%= className %>/ExportToExcel"))
-            .ExportToPdfAction(Url.Content("~/<%= className %>/ExportToPdf"))
-            .ExportToWordAction(Url.Content("~/<%= className %>/ExportToWord"))
-        )
+        //.Mappers(map => map
+        //    .ExportToExcelAction(Url.Content("~/<%= className %>/ExportToExcel"))
+        //    .ExportToPdfAction(Url.Content("~/<%= className %>/ExportToPdf"))
+        //    .ExportToWordAction(Url.Content("~/<%= className %>/ExportToWord"))
+        //)
         .PageSettings(page => page
             .PageSize(AppDefaults.SyncfusionRecordsByPage)
         )
@@ -227,9 +227,9 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
                 items.AddTool(ToolBarItems.Add);
                 items.AddTool(ToolBarItems.Edit);
                 items.AddTool(ToolBarItems.Delete);
-                items.AddTool(ToolBarItems.ExcelExport);
-                items.AddTool(ToolBarItems.PdfExport);
-                items.AddTool(ToolBarItems.WordExport);
+                //items.AddTool(ToolBarItems.ExcelExport);
+                //items.AddTool(ToolBarItems.PdfExport);
+                //items.AddTool(ToolBarItems.WordExport);
             })
         )
     )
