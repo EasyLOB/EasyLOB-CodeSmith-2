@@ -109,7 +109,9 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
         if (columnIsIdentity) { %>
                             .AllowEditing(false)<%
         }
-        if (IsDate(column.DataType)) { %>
+        if (IsBoolean(column.DataType)) { %>
+                            .EditType(EditingType.Boolean)<%
+        } else if (IsDate(column.DataType)) { %>
                             .EditType(EditingType.Datepicker)
                             .Format(SyncfusionPatternResources.GridFormat_Date)<%
         } else if (IsTime(column.DataType)) { %>
