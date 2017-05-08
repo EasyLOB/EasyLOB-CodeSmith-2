@@ -23,9 +23,17 @@ string objectName = ObjectName(SourceTable.FullName, Culture);
 
 @{
     string CSHTML = "<%= className %> - Search.cshtml";
+
+    string controllerAction = Model.ControllerAction.ToLower();
+    string controllerActionResource = PresentationResources.ResourceManager.GetString(Model.ControllerAction);
+
+    string pageTitle = AppHelper.PageTitle(<%= className %>Resources.EntitySingular, controllerActionResource);
+    string documentTitle = AppHelper.DocumentTitle(pageTitle);
 }
 
-<div class="form-inline">
+<h4>@pageTitle</h4>
+
+<div class="form-inline" style = "display: none;">
     @{ Html.RenderPartial("_<%= className %>Collection", Model); }
 </div>
 

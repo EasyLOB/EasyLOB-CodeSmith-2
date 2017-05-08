@@ -31,11 +31,11 @@ string objectName = ObjectName(SourceTable.FullName, Culture);
     string documentTitle = AppHelper.DocumentTitle(pageTitle);
 }
 
-<h4>@pageTitle</h4>
-
-@using (Ajax.BeginForm(Model.ControllerAction, "<%= className %>", AppHelper.AjaxOptions, new { id = "Form_<%= className %>" }))
+@using (Ajax.BeginForm(Model.ControllerAction, "<%= className %>", AppHelper.AjaxOptions, new { id = "Form_<%= className %>", style = "display: none;" }))
 {
     @Html.AntiForgeryToken()
+
+    <h4>@pageTitle</h4>
 
     <div class="@AppDefaults.CssClassForm">
         @{ Html.RenderPartial("_<%= className %>Item", Model); }

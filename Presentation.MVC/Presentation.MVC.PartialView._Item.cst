@@ -162,7 +162,7 @@ string keyProperty = PropertyName(keyColumn.Name);
                 // <%= Plural(pkClassName, Culture) %>
                 zUrlDictionaryWrite("<%= pkClassName %>", "@Context.Request.Url.AbsoluteUri");
                 ajaxUrl = "@(Html.Raw(Url.Action("Search", "<%= pkClassName %>", new { MasterControllerAction = Model.ControllerAction, Master<%= pkPropertyName %> = Model.<%= className %>.<%= fkPropertyName %> })))";
-                $("#Ajax_<%= className %>_<%= Plural(pkClassName, Culture) %>").load(ajaxUrl);
+                zAjaxLoadSync("Ajax_<%= className %>_<%= Plural(pkClassName, Culture) %>", ajaxUrl);
             }
 <%          index++;
         }
@@ -199,11 +199,10 @@ string keyProperty = PropertyName(keyColumn.Name);
     });    
 
     function itemActive_Tab_<%= className %>(args) {
-        try {
-            //var item = "$ej$ejTab" + "Tab_<%= className %>";
-            //zLocalStorageSet(item, '{"selectedItemIndex":' + args.model.selectedItemIndex.toString() + ',"addToPersist":["selectedItemIndex"]}');
-<%  if (SourceTable.PrimaryKeys.Count > 0) { %>
+        zTabDictionaryWrite("<%= className %>", args.model.selectedItemIndex);
 
+        try {
+<%  if (SourceTable.PrimaryKeys.Count > 0) { %>
             switch(args.model.selectedItemIndex) {
 <%      int index = 1;
         foreach (TableKeySchema primaryKey in SourceTable.PrimaryKeys) {    

@@ -249,7 +249,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
             $("#@(Model.ValueId)_LookupGrid_@(Model.ValueId)_LookupGrid_Toolbar").removeAttr("data-content");
 
             @*
-            var ejGrid = $("#@(Model.ValueId + "_LookupGrid")").data("ejGrid");
+            var ejGrid = zGrid("@(Model.ValueId)_LookupGrid");
             zOnLookupView(model, dataProfile, ejGrid);
             *@
         } catch (exception) {
@@ -311,7 +311,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
     function toolbarClick_@(Model.ValueId)_LookupGrid(sender) {
         try {
             var toolbar = $(sender.target);
-            var ejGrid = $("#@(Model.ValueId)_LookupGrid").data("ejGrid");
+            var ejGrid = zGrid("@(Model.ValueId)_LookupGrid");
 
             if (toolbar.prop("id") == "@(Model.ValueId)_LookupGrid_Toolbar_Refresh") {
                 ejGrid.refreshContent();

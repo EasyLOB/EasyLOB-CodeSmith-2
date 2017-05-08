@@ -28,8 +28,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
 
 @{
     string CSHTML = "_<%= className %>Collection.cshtml";
-    string pageTitle = <%= className %>Resources.EntityPlural;
-    string documentTitle = AppHelper.DocumentTitle(pageTitle);
+
     string query = "";
 <%  string ifElse = "if";
     foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
@@ -53,10 +52,6 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
 <%  if (SourceTable.ForeignKeys.Count > 0) { %>
     }
 <%  } %>}
-
-<div id="Collection_<%= className %>_Title">
-    <h4>@pageTitle</h4>
-</div>
 
 <div id="Collection_<%= className %>">
     @(Html.EJ().Grid<<%= className %>>("Grid_<%= className %>")
@@ -248,7 +243,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
             var model = @Html.Raw(JsonConvert.SerializeObject(Model));
             var dataProfile = @Html.Raw(JsonConvert.SerializeObject(<%= className %>.DataProfile));
 
-            zOnCollectionView(model, dataProfile, "@Html.Raw(documentTitle)", "@Url.Action("DataSource", "<%= className %>")");
+            zOnCollectionView(model, dataProfile, "@Url.Action("DataSource", "<%= className %>")");
         } catch (exception) {
             zAlert(zExceptionMessage("@CSHTML", "function", exception));
         }                
