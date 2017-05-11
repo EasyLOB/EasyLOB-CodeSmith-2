@@ -455,6 +455,27 @@ namespace XCodeSmith
             }
         }
        
+        public void GeneratePresentationMvcMenu(TableSchemaCollection sourceTables,
+            string myNamespace, string myDatabase, string output, Cultures culture)            
+        {
+            string input = this.CodeTemplateInfo.DirectoryName;
+            
+            if (output.Trim() == "")
+            {
+                output = DefaultOutput;
+            }
+            
+            if (IsNullOrEmpty(myDatabase))
+            {
+                myDatabase = myNamespace;
+            }
+
+            output = output + "/" + myNamespace + "/EasyLOB-Configuration/JSON";
+            CreateDirectory(output);
+            
+            GenerateTables(input + "/Presentation.MVC/Presentation.MVC.Menu.JSON.cst", sourceTables, myNamespace, myDatabase, output + "/Menu." + myDatabase + ".json", culture);
+        }
+       
         public void GeneratePresentationMvcPartialViewCollection(TableSchemaCollection sourceTables,
             string myNamespace, string myDatabase, string output, Cultures culture)            
         {
@@ -547,11 +568,6 @@ namespace XCodeSmith
                 GenerateTable(input + "/Presentation.MVC/Presentation.MVC.View.CRUD.cst", table, myNamespace, myDatabase, outputC + "/" + "CRUD.cshtml", culture);
                 GenerateTable(input + "/Presentation.MVC/Presentation.MVC.View.Index.cst", table, myNamespace, myDatabase, outputC + "/" + "Index.cshtml", culture);
                 GenerateTable(input + "/Presentation.MVC/Presentation.MVC.View.Search.cst", table, myNamespace, myDatabase, outputC + "/" + "Search.cshtml", culture);
-            
-                //GenerateTable(input + "/Presentation.MVC/Presentation.MVC.View.Create.cst", table, myNamespace, myDatabase, outputC + "/" + "Create.cshtml", culture);
-                //GenerateTable(input + "/Presentation.MVC/Presentation.MVC.View.Delete.cst", table, myNamespace, myDatabase, outputC + "/" + "Delete.cshtml", culture);
-                //GenerateTable(input + "/Presentation.MVC/Presentation.MVC.View.Read.cst", table, myNamespace, myDatabase, outputC + "/" + "Read.cshtml", culture);                
-                //GenerateTable(input + "/Presentation.MVC/Presentation.MVC.View.Update.cst", table, myNamespace, myDatabase, outputC + "/" + "Update.cshtml", culture);
             }
         }
 

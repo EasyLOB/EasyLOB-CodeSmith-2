@@ -12,6 +12,7 @@
 <%@ Property Name="DoPresentationModelItem" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: Item Models ?" %>
 <%@ Property Name="DoPresentationModelView" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: View Models ?" %>
 <%@ Property Name="DoPresentationMvcController" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Controllers ?" %>
+<%@ Property Name="DoPresentationMvcMenu" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Menu ?" %>
 <%@ Property Name="DoPresentationMvcPartialViewCollection" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Partial View Collection ?" %>
 <%@ Property Name="DoPresentationMvcPartialViewItem" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Partial View Item ?" %>
 <%@ Property Name="DoPresentationMvcPartialViewLookup" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Partial View Lookup ?" %>
@@ -40,6 +41,11 @@ if (DoPresentationModelItem)
 if (DoPresentationModelView)
 {
     GeneratePresentationViewModel(SourceTables, Namespace, Database, Output, Culture);
+}
+
+if (DoPresentationMvcMenu)
+{
+    GeneratePresentationMvcMenu(SourceTables, Namespace, Database, Output, Culture);
 }
 
 if (DoPresentationMvcPartialViewCollection)

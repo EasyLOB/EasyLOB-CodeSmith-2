@@ -1,0 +1,136 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
+<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+[
+  {
+    "Text": "<%= Database %>",
+    "Url": "/Home"
+  },
+  {
+    "Text": "<%= Database %>",
+    "SubMenus": [
+<%   int tables = SourceTables.Count;
+     int t = 0;
+     foreach (TableSchema table in SourceTables) {
+        t++; %>
+      {
+        "Text": "<%= ClassName(table.Name, Culture) %>Resources.EntityPlural",
+        "Url": "/<%= ClassName(table.Name, Culture) %>"
+      }<%= t < tables ? "," : "" %>
+<%  } %>
+    ]
+  },
+  {
+    "Text": "MenuResources.System",
+    "SubMenus": [
+      {
+        "Text": "PresentationResources.Language",
+        "SubMenus": [
+          {
+            "Text": "English {en-US}",
+            "Url": "/Globalization/Culture?language=en&locale=US"
+          },
+          {
+            "Text": "Português {pt-BR}",
+            "Url": "/Globalization/Culture?language=pt&locale=BR"
+          }
+        ]
+      },
+      {
+        "Text": "PresentationResources.Tasks",
+        "SubMenus": [
+          {
+            "Text": "PresentationResources.TaskCleanLocalStorage",
+            "Url": "/Tasks/CleanLocalStorage"
+          },
+          {
+            "Text": "PresentationResources.TaskCleanExportImport",
+            "Url": "/Tasks/CleanExportImport"
+          },
+          {
+            "Text": "PresentationResources.TaskStatus",
+            "Url": "/Tasks/Status"
+          },
+          {
+            "Text": "PresentationResources.TaskUrlDictionary",
+            "Url": "/Tasks/UrlDictionary"
+          }
+        ]
+      },
+      {
+        "Text": "AuthenticationResources.ChangePassword",
+        "Url": "/Authentication/ChangePassword"
+      },
+      {
+        "Text": "AuthenticationResources.LogOut",
+        "Url": "/Authentication/Logout"
+      }
+    ]
+  },
+  {
+    "Text": "MenuResources.Administration",
+    "Roles": "*",
+    "SubMenus": [
+      {
+        "Text": "SecurityResources.Security",
+        "SubMenus": [
+          {
+            "Text": "SecurityResources.Authentication",
+            "SubMenus": [
+              {
+                "Text": "RoleResources.EntityPlural",
+                "Url": "/Role"
+              },
+              {
+                "Text": "UserResources.EntityPlural",
+                "Url": "/User"
+              },
+              {
+                "Text": "UserRoleResources.EntityPlural",
+                "Url": "/UserRole"
+              }
+            ]
+          },
+          {
+            "Text": "SecurityResources.Authorization",
+            "SubMenus": [
+              {
+                "Text": "ActivityResources.EntityPlural",
+                "Url": "/Activity"
+              },
+              {
+                "Text": "ActivityRoleResources.EntityPlural",
+                "Url": "/ActivityRole"
+              }
+            ]
+          },
+          {
+            "Text": "AuditTrailResources.AuditTrail",
+            "SubMenus": [
+              {
+                "Text": "AuditTrailConfigurationResources.EntityPlural",
+                "Url": "/AuditTrailConfiguration"
+              },
+              {
+                "Text": "AuditTrailLogResources.EntityPlural",
+                "Url": "/AuditTrailLog"
+              }
+            ]
+          },
+          {
+            "Text": "SecurityResources.TaskExportSecurity",
+            "Url": "/Tasks/ExportSecurity"
+          }
+        ]
+      }
+    ]
+  }
+]

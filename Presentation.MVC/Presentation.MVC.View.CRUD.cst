@@ -27,7 +27,7 @@ string objectName = ObjectName(SourceTable.FullName, Culture);
     string controllerAction = Model.ControllerAction.ToLower();
     string controllerActionResource = PresentationResources.ResourceManager.GetString(Model.ControllerAction);
 
-    string pageTitle = AppHelper.PageTitle(<%= className %>Resources.EntitySingular, controllerActionResource, Model.IsMasterDetail);
+    string pageTitle = AppHelper.PageTitle(<%= className %>Resources.EntitySingular, controllerAction, controllerActionResource, Model.IsMasterDetail);
     string documentTitle = AppHelper.DocumentTitle(pageTitle, Model.IsMasterDetail);
 }
 
