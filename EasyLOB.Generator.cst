@@ -1,0 +1,74 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+
+<%@ Property Name="Archetype" Type="XCodeSmith.Archetypes" Category="Context" Description="Controllers Archetype" %>
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+<%@ Property Name="Output" Type="String" Category="Context" Description="Output Directory" %>
+
+<%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%
+
+// <%= Database => <%= Application
+// Namespace => X
+// GenerateDataDataModel(SourceTables, Namespace, Database, Output, Culture); 
+// GenerateDataDataModel(SourceTables, Application, Output, Culture); 
+
+string Namespace;
+string Database = Application;
+
+
+// Data
+
+Namespace = Application + ".Data";
+
+GenerateDataDataModel(SourceTables, Namespace, Database, Output, Culture); 
+GenerateDataProfile(SourceTables, Namespace, Database, Output, Culture); 
+GenerateDataDTO(SourceTables, Namespace, Database, Output, Culture); 
+GenerateDataResource(SourceTables, Namespace, Database, Output, Culture);
+
+
+// Persistence
+
+Namespace = Application + ".Persistence";
+
+GeneratePersistence(SourceTables, Namespace, Database, Output, Culture); 
+
+
+// Persistence EntityFramework
+
+Namespace = Application + ".Persistence";
+
+GeneratePersistenceEntityFrameworkConfiguration(SourceTables, Namespace, Database, Output, Culture);
+GeneratePersistenceEntityFrameworkDbContext(SourceTables, Namespace, Database, Output, Culture);   
+GeneratePersistenceEntityFrameworkGenericRepository(SourceTables, Namespace, Database, Output, Culture);    
+GeneratePersistenceEntityFrameworkUnitOfWork(SourceTables, Namespace, Database, Output, Culture);
+
+
+// Application
+
+Namespace = Application + ".Application";
+
+GenerateApplication(SourceTables, Namespace, Database, Output, Culture); 
+
+
+// MVC
+
+Namespace = Application + ".Mvc";
+
+GeneratePresentationMvcController(SourceTables, Namespace, Database, Output, Culture, Archetype);
+GeneratePresentationCollectionModel(SourceTables, Namespace, Database, Output, Culture);
+GeneratePresentationItemModel(SourceTables, Namespace, Database, Output, Culture);
+GeneratePresentationViewModel(SourceTables, Namespace, Database, Output, Culture);
+GeneratePresentationMvcMenu(SourceTables, Namespace, Database, Output, Culture);
+GeneratePresentationMvcPartialViewCollection(SourceTables, Namespace, Database, Output, Culture);
+GeneratePresentationMvcPartialViewItem(SourceTables, Namespace, Database, Output, Culture);
+GeneratePresentationMvcPartialViewLookup(SourceTables, Namespace, Database, Output, Culture);
+GeneratePresentationMvcView(SourceTables, Namespace, Database, Output, Culture);
+
+%>
