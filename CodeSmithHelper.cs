@@ -627,8 +627,8 @@ namespace XCodeSmith
                 myDatabase = myNamespace;
             }
             
-            output = output + "/" + myNamespace + "/Controllers" + "/" + myDatabase;
-            CreateDirectory(output);
+            string output1 = output + "/" + myNamespace + "/Controllers" + "/" + myDatabase + "API";
+            CreateDirectory(output1);
 
             foreach (TableSchema table in sourceTables)
             {
@@ -636,13 +636,18 @@ namespace XCodeSmith
                 
                 if (archetype == Archetypes.Persistence)
                 {
-                    GenerateTable(input + "/Service.WebAPI/Service.WebAPI.Controller.Persistence.cst", table, myNamespace, myDatabase, output + "/" + className + "ApiController.cs", culture);
+                    GenerateTable(input + "/Service.WebAPI/Service.WebAPI.Controller.Persistence.cst", table, myNamespace, myDatabase, output1 + "/" + className + "APIController.cs", culture);
                 }
                 else // Archetypes.Application
                 {
-                    GenerateTable(input + "/Service.WebAPI/Service.WebAPI.Controller.Application.cst", table, myNamespace, myDatabase, output + "/" + className + "ApiController.cs", culture);
+                    GenerateTable(input + "/Service.WebAPI/Service.WebAPI.Controller.Application.cst", table, myNamespace, myDatabase, output1 + "/" + className + "APIController.cs", culture);
                 }
             }
+            
+            string output2 = output + "/" + myNamespace + "/Views" + "/" + myDatabase + "-Custom" + "/" + myDatabase + "Tasks";
+            CreateDirectory(output2);
+            
+            GenerateTables(input + "/Service.WebAPI/Service.WebAPI.View.APIIndex.cst", sourceTables, myNamespace, myDatabase, output2 + "/APIIndex.cshtml", culture);
         }
         
         #endregion
@@ -664,15 +669,19 @@ namespace XCodeSmith
                 myDatabase = myNamespace;
             }
 
-            output = output + "/" + myNamespace;
+            string output1 = output + "/" + myDatabase;
             CreateDirectory(output);
-            string outputI = output + "/Interfaces";
+            string outputI = output1 + "/Interfaces/Application";
             CreateDirectory(outputI);
             
             GenerateTables(input + "/Application/Application.IGenericApplication.cst", sourceTables, myNamespace, myDatabase, outputI + "/I" + myDatabase + "GenericApplication.cs", culture);
             GenerateTables(input + "/Application/Application.IGenericApplicationDTO.cst", sourceTables, myNamespace, myDatabase, outputI + "/I" + myDatabase + "GenericApplicationDTO.cs", culture);
-            GenerateTables(input + "/Application/Application.GenericApplication.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "GenericApplication.cs", culture);
-            GenerateTables(input + "/Application/Application.GenericApplicationDTO.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "GenericApplicationDTO.cs", culture);
+
+            string output2 = output + "/" + myNamespace;
+            CreateDirectory(output);
+        
+            GenerateTables(input + "/Application/Application.GenericApplication.cst", sourceTables, myNamespace, myDatabase, output2 + "/" + myDatabase + "GenericApplication.cs", culture);
+            GenerateTables(input + "/Application/Application.GenericApplicationDTO.cst", sourceTables, myNamespace, myDatabase, output2 + "/" + myDatabase + "GenericApplicationDTO.cs", culture);
         }
 
         #endregion
@@ -694,9 +703,9 @@ namespace XCodeSmith
                 myDatabase = myNamespace;
             }
 
-            output = output + "/" + myNamespace;
+            output = output + "/" + myDatabase;
             CreateDirectory(output);
-            string outputI = output + "/Interfaces";
+            string outputI = output + "/Interfaces/Persistence";
             CreateDirectory(outputI);
             
             GenerateTables(input + "/Persistence/Persistence.IGenericRepository.cst", sourceTables, myNamespace, myDatabase, outputI + "/I" + myDatabase + "GenericRepository.cs", culture);

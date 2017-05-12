@@ -9,26 +9,11 @@
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
-@*
-
-    /Controllers/HomeController.cs
-
-    public ActionResult WebApiIndex()
-    {
-        ViewBag.Title = "Web API Index";
-
-        return View();
-    }
-
-    /View/Home/WebApiIndex.cshtml
-
-*@
-
 <br />
-<%= Database %><br />
+<%= Database %> Web API Index<br />
 <%  foreach (TableSchema table in SourceTables) {
         string className = ClassName(table.Name, Culture);
-        string objectName = ObjectName(table.Name, Culture); %>
+        string objectName = ObjectName(table.Name, Culture).ToLower(); %>
 <br />
 <%= className %><br />
 <a href="@Url.Content("/api/<%= objectName %>api")">api/<%= objectName %>api</a><br />

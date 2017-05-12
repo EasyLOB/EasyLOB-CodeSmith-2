@@ -41,6 +41,7 @@ using <%= Database %>.Application;
 using <%= Database %>.Data;
 using EasyLOB;
 using EasyLOB.Library.WebApi;
+using EasyLOB.Mvc;
 using EasyLOB.WebApi;
 using System;
 using System.Collections.Generic;
@@ -48,11 +49,11 @@ using System.Web.Http;
 
 namespace <%= Namespace %>
 {
-    public class <%= className %>ApiController : BaseApiControllerApplication<<%= className %>DTO, <%= className %>>
+    public class <%= className %>APIController : BaseApiControllerApplication<<%= className %>DTO, <%= className %>>
     {
         #region Methods
 
-        public <%= className %>ApiController(I<%= Database %>GenericApplicationDTO<<%= className %>DTO, <%= className %>> application)
+        public <%= className %>APIController(I<%= Database %>GenericApplicationDTO<<%= className %>DTO, <%= className %>> application)
         {
             Application = application;
         }
@@ -93,7 +94,9 @@ namespace <%= Namespace %>
 
             try
             {
-                return Ok<IEnumerable<<%= className %>DTO>>(Application.SelectAll(operationResult));
+                return Ok<IEnumerable<<%= className %>DTO>>(Application.Select(operationResult,
+                    null, null, (null as int?), AppDefaults.SyncfusionRecordsBySearch));
+                //return Ok<IEnumerable<<%= className %>DTO>>(Application.SelectAll(operationResult));
             }
             catch (Exception exception)
             {
