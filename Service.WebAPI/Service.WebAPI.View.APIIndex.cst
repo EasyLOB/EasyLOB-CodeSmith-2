@@ -10,7 +10,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <br />
-<%= Database %> API Index<br />
+@<%= Database %>PresentationResources.Task<%= Database %>APIIndex<br />
 <%  foreach (TableSchema table in SourceTables) {
         string className = ClassName(table.Name, Culture);
         string objectName = ObjectName(table.Name, Culture).ToLower(); %>

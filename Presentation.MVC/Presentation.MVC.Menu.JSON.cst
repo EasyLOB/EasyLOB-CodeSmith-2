@@ -32,11 +32,11 @@
     "Text": "PresentationResources.Tasks",
     "SubMenus": [
       {
-        "Text": "<%= Database %>ApplicationResources.Task<%= Database %>APIIndex",
+        "Text": "<%= Database %>PresentationResources.Task<%= Database %>APIIndex",
         "Url": "/<%= Database %>Tasks/<%= Database %>APIIndex"
       },
       {
-        "Text": "<%= Database %>ApplicationResources.Task<%= Database %>Status",
+        "Text": "<%= Database %>PresentationResources.Task<%= Database %>Status",
         "Url": "/<%= Database %>Tasks/<%= Database %>Status"
       }
     ]
