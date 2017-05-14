@@ -22,11 +22,10 @@
 string Namespace;
 string Database = Application;
 
-/*
+
 // Data
 
 Namespace = Application + ".Data";
-
 GenerateDataDataModel(SourceTables, Namespace, Database, Output, Culture); 
 GenerateDataProfile(SourceTables, Namespace, Database, Output, Culture); 
 GenerateDataDTO(SourceTables, Namespace, Database, Output, Culture); 
@@ -36,14 +35,12 @@ GenerateDataResource(SourceTables, Namespace, Database, Output, Culture);
 // Persistence
 
 Namespace = Application + ".Persistence";
-
 GeneratePersistence(SourceTables, Namespace, Database, Output, Culture); 
 
 
 // Persistence EntityFramework
 
 Namespace = Application + ".Persistence";
-
 GeneratePersistenceEntityFrameworkConfiguration(SourceTables, Namespace, Database, Output, Culture);
 GeneratePersistenceEntityFrameworkDbContext(SourceTables, Namespace, Database, Output, Culture);   
 GeneratePersistenceEntityFrameworkGenericRepository(SourceTables, Namespace, Database, Output, Culture);    
@@ -53,13 +50,12 @@ GeneratePersistenceEntityFrameworkUnitOfWork(SourceTables, Namespace, Database, 
 // Application
 
 Namespace = Application + ".Application";
-
 GenerateApplication(SourceTables, Namespace, Database, Output, Culture); 
+
 
 // MVC
 
 Namespace = Application + ".Mvc";
-
 GeneratePresentationMvcController(SourceTables, Namespace, Database, Output, Culture, Archetype);
 GeneratePresentationCollectionModel(SourceTables, Namespace, Database, Output, Culture);
 GeneratePresentationItemModel(SourceTables, Namespace, Database, Output, Culture);
@@ -69,12 +65,11 @@ GeneratePresentationMvcPartialViewCollection(SourceTables, Namespace, Database, 
 GeneratePresentationMvcPartialViewItem(SourceTables, Namespace, Database, Output, Culture);
 GeneratePresentationMvcPartialViewLookup(SourceTables, Namespace, Database, Output, Culture);
 GeneratePresentationMvcView(SourceTables, Namespace, Database, Output, Culture);
-*/
+
 
 // Web API
 
 Namespace = Application + ".Mvc";
-
 GenerateServiceWebApiController(SourceTables, Namespace, Database, Output, Culture, Archetype); 
 
 %>
