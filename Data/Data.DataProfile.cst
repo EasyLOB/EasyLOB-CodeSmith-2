@@ -251,13 +251,13 @@ namespace <%= Namespace %>
         }
         //
         string gridWidth = GridWidth(column).Replace("px", "").PadLeft(3);
-        string editVisible = column.IsPrimaryKeyMember ? "false" : "true ";
+        string editVisible = column.IsPrimaryKeyMember && IsIdentity(column) ? "false" : "true ";
         string editReadOnly = "false";
         string editWidthCSS = BootstrapWidth(column);
         string fkTable = FKTableName(SourceTable, column).Replace("dbo.", ""); %>
                         new ZPropertyProfile(<%= gridVisible %>, <%= gridSearch %>, <%= gridWidth %>, <%= editVisible %>, <%= editReadOnly %>, "<%= editWidthCSS %>", "<%= PropertyName(column.Name) %>")<%= columnIsForeignKey ? "," : comma %>
 <%      if (columnIsForeignKey) { %>                        
-                        new ZPropertyProfile(true , true , 200, false, false, "col-md-4", "<%= fkTable %>LookupText")<%= comma %>
+                        new ZPropertyProfile(true , true , 200, false, false, "col-md-4", "<%= ClassName(fkTable, Culture) %>LookupText")<%= comma %>
 <%      }
     } %>
                     }

@@ -22,7 +22,8 @@ namespace <%= Namespace %>
         public <%= Database %>UnitOfWorkNH(IAuthenticationManager authenticationManager)
             : base(<%= Database %>Factory.Session, authenticationManager)
         {
-            Domain = "<%= Database %>";
+            Domain = ""; // ???
+            //Domain = "<%= Database %>";
 
             //ISession session = base.Session;
         }

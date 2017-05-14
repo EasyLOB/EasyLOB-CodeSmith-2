@@ -11,7 +11,7 @@
 <%@ Import Namespace="System.Data" %>
 [
   {
-    "Text": "<%= Database %>",
+    "Text": "Home",
     "Url": "/Home"
   },
   {
@@ -26,6 +26,19 @@
         "Url": "/<%= ClassName(table.Name, Culture) %>"
       }<%= t < tables ? "," : "" %>
 <%  } %>
+    ]
+  },
+  {
+    "Text": "PresentationResources.Tasks",
+    "SubMenus": [
+      {
+        "Text": "<%= Database %>ApplicationResources.Task<%= Database %>APIIndex",
+        "Url": "/<%= Database %>Tasks/<%= Database %>APIIndex"
+      },
+      {
+        "Text": "<%= Database %>ApplicationResources.Task<%= Database %>Status",
+        "Url": "/<%= Database %>Tasks/<%= Database %>Status"
+      }
     ]
   },
   {
@@ -77,7 +90,6 @@
   },
   {
     "Text": "MenuResources.Administration",
-    "Roles": "*",
     "SubMenus": [
       {
         "Text": "SecurityResources.Security",

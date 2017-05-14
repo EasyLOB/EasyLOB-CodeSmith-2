@@ -22,7 +22,7 @@
 string Namespace;
 string Database = Application;
 
-
+/*
 // Data
 
 Namespace = Application + ".Data";
@@ -56,7 +56,6 @@ Namespace = Application + ".Application";
 
 GenerateApplication(SourceTables, Namespace, Database, Output, Culture); 
 
-
 // MVC
 
 Namespace = Application + ".Mvc";
@@ -70,5 +69,12 @@ GeneratePresentationMvcPartialViewCollection(SourceTables, Namespace, Database, 
 GeneratePresentationMvcPartialViewItem(SourceTables, Namespace, Database, Output, Culture);
 GeneratePresentationMvcPartialViewLookup(SourceTables, Namespace, Database, Output, Culture);
 GeneratePresentationMvcView(SourceTables, Namespace, Database, Output, Culture);
+*/
+
+// Web API
+
+Namespace = Application + ".Mvc";
+
+GenerateServiceWebApiController(SourceTables, Namespace, Database, Output, Culture, Archetype); 
 
 %>

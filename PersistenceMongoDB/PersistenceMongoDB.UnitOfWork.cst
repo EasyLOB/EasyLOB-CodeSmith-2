@@ -24,7 +24,8 @@ namespace <%= Namespace %>
         public <%= Database %>UnitOfWorkMongoDB(IAuthenticationManager authenticationManager)
             : base(ConfigurationHelper.AppSettings<string>("MongoDB.<%= Database %>.Url"), ConfigurationHelper.AppSettings<string>("MongoDB.<%= Database %>.Database"), authenticationManager)
         {           
-            Domain = "<%= Database %>";
+            Domain = ""; // ???
+            //Domain = "<%= Database %>";
 
 <%  foreach (TableSchema table in SourceTables) { %>
             <%= Database %>MongoDBMap.<%= ClassName(table.Name, Culture) %>Map();

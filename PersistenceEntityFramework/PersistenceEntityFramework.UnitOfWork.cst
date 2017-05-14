@@ -22,7 +22,8 @@ namespace <%= Namespace %>
         public <%= Database %>UnitOfWorkEF(IAuthenticationManager authenticationManager)
             : base(new <%= Database %>DbContext(), authenticationManager)
         {
-            Domain = "<%= Database %>";
+            Domain = ""; // ???
+            //Domain = "<%= Database %>";
 
             //<%= Database %>DbContext context = (<%= Database %>DbContext)base.context;
         }
