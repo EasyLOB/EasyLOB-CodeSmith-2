@@ -14,7 +14,7 @@
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
-<%
+<% 
 if (DoServiceWebApiController)
 {
     GenerateServiceWebApiController(SourceTables, Namespace, Database, Output, Culture, Archetype); 
