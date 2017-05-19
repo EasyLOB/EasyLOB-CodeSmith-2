@@ -2312,7 +2312,7 @@ namespace XCodeSmith
             }
             else if (IsDate(column.DataType))
             {
-                result = "col-md-1";
+                result = "col-md-2";
             }
             else if (IsDateTime(column.DataType))
             {
