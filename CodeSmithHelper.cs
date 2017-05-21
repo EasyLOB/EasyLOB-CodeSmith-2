@@ -281,7 +281,7 @@ namespace XCodeSmith
         #region Generate
 
         protected void GenerateTable(string templateFileName, TableSchema table,
-            string myNamespace, string myDatabase, string fileName, Cultures culture)
+            string myApplication, string myNamespace, string fileName, Cultures culture)
         {
             //System.Diagnostics.Debugger.Break();
 
@@ -292,8 +292,8 @@ namespace XCodeSmith
             {
                 CodeTemplate template = compiler.CreateInstance();
 
+                template.SetProperty("Application", myApplication);
                 template.SetProperty("Culture", culture);
-                template.SetProperty("Database", myDatabase);
                 template.SetProperty("Namespace", myNamespace);
                 template.SetProperty("SourceTable", table);
 
@@ -309,7 +309,7 @@ namespace XCodeSmith
         }
 
         protected void GenerateTables(string templateFileName, TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string fileName, Cultures culture)
+            string myApplication, string myNamespace, string fileName, Cultures culture)
         {
             //System.Diagnostics.Debugger.Break();
 
@@ -320,8 +320,8 @@ namespace XCodeSmith
             {
                 CodeTemplate template = compiler.CreateInstance();
 
+                template.SetProperty("Application", myApplication);
                 template.SetProperty("Culture", culture);
-                template.SetProperty("Database", myDatabase);
                 template.SetProperty("Namespace", myNamespace);
                 template.SetProperty("SourceTables", sourceTables);
 
@@ -341,7 +341,7 @@ namespace XCodeSmith
         #region Generate Presentation
         
         public void GeneratePresentationCollectionModel(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
 
@@ -350,24 +350,24 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
 
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
-            output = output + "/" + myNamespace + "/Models/" + myDatabase + "/CollectionModels";
+            output = output + "/" + myNamespace + "/Models/" + myApplication + "/CollectionModels";
             CreateDirectory(output);
 
             foreach (TableSchema table in sourceTables)
             {
                 string className = ClassName(table.FullName, culture);
 
-                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.Model.CollectionModel.cst", table, myNamespace, myDatabase, output + "/" + className + "CollectionModel.cs", culture);
+                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.Model.CollectionModel.cst", table, myApplication, myNamespace, output + "/" + className + "CollectionModel.cs", culture);
             }
         }
 
         public void GeneratePresentationItemModel(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
 
@@ -376,24 +376,24 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
 
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
-            output = output + "/" + myNamespace + "/Models/" + myDatabase + "/ItemModels";
+            output = output + "/" + myNamespace + "/Models/" + myApplication + "/ItemModels";
             CreateDirectory(output);
 
             foreach (TableSchema table in sourceTables)
             {
                 string className = ClassName(table.FullName, culture);
 
-                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.Model.ItemModel.cst", table, myNamespace, myDatabase, output + "/" + className + "ItemModel.cs", culture);
+                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.Model.ItemModel.cst", table, myApplication, myNamespace, output + "/" + className + "ItemModel.cs", culture);
             }
         }
 
         public void GeneratePresentationViewModel(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
 
@@ -402,19 +402,19 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
 
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
-            output = output + "/" + myNamespace + "/Models/" + myDatabase + "/ViewModels";
+            output = output + "/" + myNamespace + "/Models/" + myApplication + "/ViewModels";
             CreateDirectory(output);
 
             foreach (TableSchema table in sourceTables)
             {
                 string className = ClassName(table.FullName, culture);
 
-                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.Model.ViewModel.cst", table, myNamespace, myDatabase, output + "/" + className + "ViewModel.cs", culture);
+                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.Model.ViewModel.cst", table, myApplication, myNamespace, output + "/" + className + "ViewModel.cs", culture);
             }
         }
 
@@ -423,7 +423,7 @@ namespace XCodeSmith
         #region Generate Presentation MVC
 
         public void GeneratePresentationMvcController(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture, Archetypes archetype)
+            string myApplication, string myNamespace, string output, Cultures culture, Archetypes archetype)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -432,12 +432,12 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
             
-            output = output + "/" + myNamespace + "/Controllers" + "/" + myDatabase;
+            output = output + "/" + myNamespace + "/Controllers" + "/" + myApplication;
             CreateDirectory(output);
 
             foreach (TableSchema table in sourceTables)
@@ -446,17 +446,17 @@ namespace XCodeSmith
                 
                 if (archetype == Archetypes.Persistence)
                 {
-                    GenerateTable(input + "/Presentation.MVC" + "/Presentation.MVC.Controller.Persistence.cst", table, myNamespace, myDatabase, output + "/" + className + "Controller.cs", culture);
+                    GenerateTable(input + "/Presentation.MVC" + "/Presentation.MVC.Controller.Persistence.cst", table, myApplication, myNamespace, output + "/" + className + "Controller.cs", culture);
                 }
                 else // Archetypes.Application
                 {
-                    GenerateTable(input + "/Presentation.MVC" + "/Presentation.MVC.Controller.Application.cst", table, myNamespace, myDatabase, output + "/" + className + "Controller.cs", culture);
+                    GenerateTable(input + "/Presentation.MVC" + "/Presentation.MVC.Controller.Application.cst", table, myApplication, myNamespace, output + "/" + className + "Controller.cs", culture);
                 }
             }
         }
        
         public void GeneratePresentationMvcMenu(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)            
+            string myApplication, string myNamespace, string output, Cultures culture)            
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -465,43 +465,43 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "/EasyLOB-Configuration/JSON";
             CreateDirectory(output);
             
-            GenerateTables(input + "/Presentation.MVC/Presentation.MVC.Menu.JSON.cst", sourceTables, myNamespace, myDatabase, output + "/Menu." + myDatabase + ".json", culture);
+            GenerateTables(input + "/Presentation.MVC/Presentation.MVC.Menu.JSON.cst", sourceTables, myApplication, myNamespace, output + "/Menu." + myApplication + ".json", culture);
         }
        
         public void GeneratePresentationMvcPartialViewCollection(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)            
+            string myApplication, string myNamespace, string output, Cultures culture)            
         {
             GeneratePresentationMvcPartialView(sourceTables,
-                myNamespace, myDatabase, output, culture,
+                myApplication, myNamespace, output, culture,
                 "/Presentation.MVC/Presentation.MVC.PartialView._Collection.cst", "Collection.cshtml");
         }
        
         public void GeneratePresentationMvcPartialViewItem(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)            
+            string myApplication, string myNamespace, string output, Cultures culture)            
         {
             GeneratePresentationMvcPartialView(sourceTables,
-                myNamespace, myDatabase, output, culture,
+                myApplication, myNamespace, output, culture,
                 "/Presentation.MVC/Presentation.MVC.PartialView._Item.cst", "Item.cshtml");
         }
        
         public void GeneratePresentationMvcPartialViewLookup(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)            
+            string myApplication, string myNamespace, string output, Cultures culture)            
         {
             GeneratePresentationMvcPartialView(sourceTables,
-                myNamespace, myDatabase, output, culture,
+                myApplication, myNamespace, output, culture,
                 "/Presentation.MVC/Presentation.MVC.PartialView._Lookup.cst", "Lookup.cshtml");
         }
         
         public void GeneratePresentationMvcPartialView(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture,
+            string myApplication, string myNamespace, string output, Cultures culture,
             string cst, string cshtml)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
@@ -511,15 +511,15 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
             
             output = output + "/" + myNamespace + "/Views";
             CreateDirectory(output);
             
-            output = output + "/" + myDatabase;
+            output = output + "/" + myApplication;
             CreateDirectory(output);
                  
             foreach (TableSchema table in sourceTables)
@@ -529,16 +529,16 @@ namespace XCodeSmith
                 string outputC = output + "/" + className;
                 CreateDirectory(outputC);
 
-                GenerateTable(input + cst, table, myNamespace, myDatabase, outputC + "/_" + className + cshtml, culture);
+                GenerateTable(input + cst, table, myApplication, myNamespace, outputC + "/_" + className + cshtml, culture);
 
-                //GenerateTable(input + "/Presentation.MVC/Presentation.MVC.PartialView._Collection.cst", table, myNamespace, myDatabase, outputC + "/_" + className + "Collection.cshtml", culture);  
-                //GenerateTable(input + "/Presentation.MVC/Presentation.MVC.PartialView._Item.cst", table, myNamespace, myDatabase, outputC + "/_" + className + "Item.cshtml", culture);
-                //GenerateTable(input + "/Presentation.MVC/Presentation.MVC.PartialView._Lookup.cst", table, myNamespace, myDatabase, outputC + "/_" + className + "Lookup.cshtml", culture);  
+                //GenerateTable(input + "/Presentation.MVC/Presentation.MVC.PartialView._Collection.cst", table, myApplication, myNamespace, outputC + "/_" + className + "Collection.cshtml", culture);  
+                //GenerateTable(input + "/Presentation.MVC/Presentation.MVC.PartialView._Item.cst", table, myApplication, myNamespace, outputC + "/_" + className + "Item.cshtml", culture);
+                //GenerateTable(input + "/Presentation.MVC/Presentation.MVC.PartialView._Lookup.cst", table, myApplication, myNamespace, outputC + "/_" + className + "Lookup.cshtml", culture);  
             }
         }
 
         public void GeneratePresentationMvcView(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -547,15 +547,15 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
             
             output = output + "/" + myNamespace + "/Views";
             CreateDirectory(output);
 
-            output = output + "/" + myDatabase;
+            output = output + "/" + myApplication;
             CreateDirectory(output);
 
             foreach (TableSchema table in sourceTables)
@@ -565,9 +565,9 @@ namespace XCodeSmith
                 string outputC = output + "/" + className;
                 CreateDirectory(outputC);
 
-                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.View.CRUD.cst", table, myNamespace, myDatabase, outputC + "/" + "CRUD.cshtml", culture);
-                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.View.Index.cst", table, myNamespace, myDatabase, outputC + "/" + "Index.cshtml", culture);
-                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.View.Search.cst", table, myNamespace, myDatabase, outputC + "/" + "Search.cshtml", culture);
+                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.View.CRUD.cst", table, myApplication, myNamespace, outputC + "/" + "CRUD.cshtml", culture);
+                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.View.Index.cst", table, myApplication, myNamespace, outputC + "/" + "Index.cshtml", culture);
+                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.View.Search.cst", table, myApplication, myNamespace, outputC + "/" + "Search.cshtml", culture);
             }
         }
 
@@ -576,7 +576,7 @@ namespace XCodeSmith
         #region Generate Service OData
 
         public void GenerateServiceODataController(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture, Archetypes archetype)
+            string myApplication, string myNamespace, string output, Cultures culture, Archetypes archetype)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -585,12 +585,12 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
             
-            output = output + "/" + myNamespace + "/Controllers" + "/" + myDatabase;
+            output = output + "/" + myNamespace + "/Controllers" + "/" + myApplication;
             CreateDirectory(output);
 
             foreach (TableSchema table in sourceTables)
@@ -599,11 +599,11 @@ namespace XCodeSmith
                 
                 if (archetype == Archetypes.Persistence)
                 {
-                    GenerateTable(input + "/Service.OData/Service.OData.Controller.Persistence.cst", table, myNamespace, myDatabase, output + "/" + className + "Controller.cs", culture);
+                    GenerateTable(input + "/Service.OData/Service.OData.Controller.Persistence.cst", table, myApplication, myNamespace, output + "/" + className + "Controller.cs", culture);
                 }
                 else // Archetypes.Application
                 {
-                    GenerateTable(input + "/Service.OData/Service.OData.Controller.Application.cst", table, myNamespace, myDatabase, output + "/" + className + "Controller.cs", culture);
+                    GenerateTable(input + "/Service.OData/Service.OData.Controller.Application.cst", table, myApplication, myNamespace, output + "/" + className + "Controller.cs", culture);
                 }
             }
         }
@@ -613,7 +613,7 @@ namespace XCodeSmith
         #region Generate Service Web API
         
         public void GenerateServiceWebApiController(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture, Archetypes archetype)
+            string myApplication, string myNamespace, string output, Cultures culture, Archetypes archetype)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -622,12 +622,12 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
             
-            string output1 = output + "/" + myNamespace + "/Controllers" + "/" + myDatabase + "API";
+            string output1 = output + "/" + myNamespace + "/Controllers" + "/" + myApplication + "API";
             CreateDirectory(output1);
 
             foreach (TableSchema table in sourceTables)
@@ -636,18 +636,18 @@ namespace XCodeSmith
                 
                 if (archetype == Archetypes.Persistence)
                 {
-                    GenerateTable(input + "/Service.WebAPI/Service.WebAPI.Controller.Persistence.cst", table, myNamespace, myDatabase, output1 + "/" + className + "APIController.cs", culture);
+                    GenerateTable(input + "/Service.WebAPI/Service.WebAPI.Controller.Persistence.cst", table, myApplication, myNamespace, output1 + "/" + className + "APIController.cs", culture);
                 }
                 else // Archetypes.Application
                 {
-                    GenerateTable(input + "/Service.WebAPI/Service.WebAPI.Controller.Application.cst", table, myNamespace, myDatabase, output1 + "/" + className + "APIController.cs", culture);
+                    GenerateTable(input + "/Service.WebAPI/Service.WebAPI.Controller.Application.cst", table, myApplication, myNamespace, output1 + "/" + className + "APIController.cs", culture);
                 }
             }
             
-            string output2 = output + "/" + myNamespace + "/Views" + "/" + myDatabase + "-Custom" + "/" + myDatabase + "Tasks";
+            string output2 = output + "/" + myNamespace + "/Views" + "/" + myApplication + "-Custom" + "/" + myApplication + "Tasks";
             CreateDirectory(output2);
             
-            GenerateTables(input + "/Service.WebAPI/Service.WebAPI.View.APIIndex.cst", sourceTables, myNamespace, myDatabase, output2 + "/" + myDatabase + "APIIndex.cshtml", culture);
+            GenerateTables(input + "/Service.WebAPI/Service.WebAPI.View.APIIndex.cst", sourceTables, myApplication, myNamespace, output2 + "/" + myApplication + "APIIndex.cshtml", culture);
         }
         
         #endregion
@@ -655,7 +655,7 @@ namespace XCodeSmith
         #region Generate Application
         
         public void GenerateApplication(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -664,24 +664,24 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
-            string output1 = output + "/" + myDatabase;
+            string output1 = output + "/" + myApplication;
             CreateDirectory(output);
             string outputI = output1 + "/Interfaces/Application";
             CreateDirectory(outputI);
             
-            GenerateTables(input + "/Application/Application.IGenericApplication.cst", sourceTables, myNamespace, myDatabase, outputI + "/I" + myDatabase + "GenericApplication.cs", culture);
-            GenerateTables(input + "/Application/Application.IGenericApplicationDTO.cst", sourceTables, myNamespace, myDatabase, outputI + "/I" + myDatabase + "GenericApplicationDTO.cs", culture);
+            GenerateTables(input + "/Application/Application.IGenericApplication.cst", sourceTables, myApplication, myNamespace, outputI + "/I" + myApplication + "GenericApplication.cs", culture);
+            GenerateTables(input + "/Application/Application.IGenericApplicationDTO.cst", sourceTables, myApplication, myNamespace, outputI + "/I" + myApplication + "GenericApplicationDTO.cs", culture);
 
             string output2 = output + "/" + myNamespace;
             CreateDirectory(output);
         
-            GenerateTables(input + "/Application/Application.GenericApplication.cst", sourceTables, myNamespace, myDatabase, output2 + "/" + myDatabase + "GenericApplication.cs", culture);
-            GenerateTables(input + "/Application/Application.GenericApplicationDTO.cst", sourceTables, myNamespace, myDatabase, output2 + "/" + myDatabase + "GenericApplicationDTO.cs", culture);
+            GenerateTables(input + "/Application/Application.GenericApplication.cst", sourceTables, myApplication, myNamespace, output2 + "/" + myApplication + "GenericApplication.cs", culture);
+            GenerateTables(input + "/Application/Application.GenericApplicationDTO.cst", sourceTables, myApplication, myNamespace, output2 + "/" + myApplication + "GenericApplicationDTO.cs", culture);
         }
 
         #endregion
@@ -689,7 +689,7 @@ namespace XCodeSmith
         #region Generate Persistence
         
         public void GeneratePersistence(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -698,20 +698,20 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
-            output = output + "/" + myDatabase;
+            output = output + "/" + myApplication;
             CreateDirectory(output);
             string outputI = output + "/Interfaces/Persistence";
             CreateDirectory(outputI);
             
-            GenerateTables(input + "/Persistence/Persistence.IGenericRepository.cst", sourceTables, myNamespace, myDatabase, outputI + "/I" + myDatabase + "GenericRepository.cs", culture);
-            GenerateTables(input + "/Persistence/Persistence.IGenericRepositoryDTO.cst", sourceTables, myNamespace, myDatabase, outputI + "/I" + myDatabase + "GenericRepositoryDTO.cs", culture);
-            GenerateTables(input + "/Persistence/Persistence.IUnitOfWork.cst", sourceTables, myNamespace, myDatabase, outputI + "/I" + myDatabase + "UnitOfWork.cs", culture);
-            GenerateTables(input + "/Persistence/Persistence.IUnitOfWorkDTO.cst", sourceTables, myNamespace, myDatabase, outputI + "/I" + myDatabase + "UnitOfWorkDTO.cs", culture);
+            GenerateTables(input + "/Persistence/Persistence.IGenericRepository.cst", sourceTables, myApplication, myNamespace, outputI + "/I" + myApplication + "GenericRepository.cs", culture);
+            GenerateTables(input + "/Persistence/Persistence.IGenericRepositoryDTO.cst", sourceTables, myApplication, myNamespace, outputI + "/I" + myApplication + "GenericRepositoryDTO.cs", culture);
+            GenerateTables(input + "/Persistence/Persistence.IUnitOfWork.cst", sourceTables, myApplication, myNamespace, outputI + "/I" + myApplication + "UnitOfWork.cs", culture);
+            GenerateTables(input + "/Persistence/Persistence.IUnitOfWorkDTO.cst", sourceTables, myApplication, myNamespace, outputI + "/I" + myApplication + "UnitOfWorkDTO.cs", culture);
         }
 
         #endregion
@@ -719,7 +719,7 @@ namespace XCodeSmith
         #region Generate Persistence Entity Framework
 
         public void GeneratePersistenceEntityFrameworkConfiguration(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -728,9 +728,9 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "EntityFramework" + "/Configurations";
@@ -740,12 +740,12 @@ namespace XCodeSmith
             {
                 string className = ClassName(table.FullName, culture);
                 
-                GenerateTable(input + "/PersistenceEntityFramework/PersistenceEntityFramework.Configuration.cst", table, myNamespace, myDatabase, output + "/" + className + "Configuration.cs", culture);
+                GenerateTable(input + "/PersistenceEntityFramework/PersistenceEntityFramework.Configuration.cst", table, myApplication, myNamespace, output + "/" + className + "Configuration.cs", culture);
             }
         }
 
         public void GeneratePersistenceEntityFrameworkDbContext(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -754,19 +754,19 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "EntityFramework";
             CreateDirectory(output);
             
-            GenerateTables(input + "/PersistenceEntityFramework/PersistenceEntityFramework.DbContext.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "DbContext.cs", culture);
+            GenerateTables(input + "/PersistenceEntityFramework/PersistenceEntityFramework.DbContext.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "DbContext.cs", culture);
         }
 
         public void GeneratePersistenceEntityFrameworkGenericRepository(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -775,19 +775,19 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "EntityFramework" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceEntityFramework/PersistenceEntityFramework.GenericRepository.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "GenericRepositoryEF.cs", culture);
+            GenerateTables(input + "/PersistenceEntityFramework/PersistenceEntityFramework.GenericRepository.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "GenericRepositoryEF.cs", culture);
         }
 
         public void GeneratePersistenceEntityFrameworkUnitOfWork(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -796,15 +796,15 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "EntityFramework" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceEntityFramework/PersistenceEntityFramework.UnitOfWork.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "UnitOfWorkEF.cs", culture);
+            GenerateTables(input + "/PersistenceEntityFramework/PersistenceEntityFramework.UnitOfWork.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "UnitOfWorkEF.cs", culture);
         }
         
         #endregion
@@ -812,7 +812,7 @@ namespace XCodeSmith
         #region Generate Persistence LINQ2DB
 
         public void GeneratePersistenceLINQ2DBDataConnection(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -821,19 +821,19 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "LINQ2DB";
             CreateDirectory(output);
             
-            GenerateTables(input + "/PersistenceLINQ2DB/PersistenceLINQ2DB.DataConnection.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "LINQ2DB.cs", culture);
+            GenerateTables(input + "/PersistenceLINQ2DB/PersistenceLINQ2DB.DataConnection.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "LINQ2DB.cs", culture);
         }        
 
         public void GeneratePersistenceLINQ2DBGenericRepository(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -842,19 +842,19 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "LINQ2DB" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceLINQ2DB/PersistenceLINQ2DB.GenericRepository.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "GenericRepositoryLINQ2DB.cs", culture);
+            GenerateTables(input + "/PersistenceLINQ2DB/PersistenceLINQ2DB.GenericRepository.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "GenericRepositoryLINQ2DB.cs", culture);
         }
 
         public void GeneratePersistenceLINQ2DBMap(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -863,9 +863,9 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "LINQ2DB" + "/Maps";
@@ -875,12 +875,12 @@ namespace XCodeSmith
             {
                 string className = ClassName(table.FullName, culture);
                 
-                GenerateTable(input + "/PersistenceLINQ2DB/PersistenceLINQ2DB.Map.cst", table, myNamespace, myDatabase, output + "/" + className + "Map.cs", culture);
+                GenerateTable(input + "/PersistenceLINQ2DB/PersistenceLINQ2DB.Map.cst", table, myApplication, myNamespace, output + "/" + className + "Map.cs", culture);
             }
         }
 
         public void GeneratePersistenceLINQ2DBRepository(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -889,9 +889,9 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "LINQ2DB" + "/Repositories";
@@ -901,12 +901,12 @@ namespace XCodeSmith
             {
                 string className = ClassName(table.FullName, culture);
                 
-                GenerateTable(input + "/PersistenceLINQ2DB/PersistenceLINQ2DB.Repository.cst", table, myNamespace, myDatabase, output + "/" + myDatabase + className + "RepositoryLINQ2DB.cs", culture);
+                GenerateTable(input + "/PersistenceLINQ2DB/PersistenceLINQ2DB.Repository.cst", table, myApplication, myNamespace, output + "/" + myApplication + className + "RepositoryLINQ2DB.cs", culture);
             }
         }
         
         public void GeneratePersistenceLINQ2DBUnitOfWork(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -915,15 +915,15 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "LINQ2DB" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceLINQ2DB/PersistenceLINQ2DB.UnitOfWork.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "UnitOfWorkLINQ2DB.cs", culture);
+            GenerateTables(input + "/PersistenceLINQ2DB/PersistenceLINQ2DB.UnitOfWork.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "UnitOfWorkLINQ2DB.cs", culture);
         }
 
         #endregion
@@ -931,7 +931,7 @@ namespace XCodeSmith
         #region Generate Persistence MongoDB
 
         public void GeneratePersistenceMongoDBMap(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -940,9 +940,9 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "MongoDB" + "/Maps";
@@ -952,12 +952,12 @@ namespace XCodeSmith
             {
                 string className = ClassName(table.FullName, culture);
                 
-                GenerateTable(input + "/PersistenceMongoDB/PersistenceMongoDB.Map.cst", table, myNamespace, myDatabase, output + "/" + className + "Map.cs", culture);
+                GenerateTable(input + "/PersistenceMongoDB/PersistenceMongoDB.Map.cst", table, myApplication, myNamespace, output + "/" + className + "Map.cs", culture);
             }
         }        
 
         public void GeneratePersistenceMongoDBGenericRepository(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -966,19 +966,19 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "MongoDB" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceMongoDB/PersistenceMongoDB.GenericRepository.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "GenericRepositoryMongoDB.cs", culture);
+            GenerateTables(input + "/PersistenceMongoDB/PersistenceMongoDB.GenericRepository.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "GenericRepositoryMongoDB.cs", culture);
         }
 
         public void GeneratePersistenceMongoDBRepository(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
 
@@ -987,9 +987,9 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
 
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "MongoDB" + "/Repositories";
@@ -999,12 +999,12 @@ namespace XCodeSmith
             {
                 string className = ClassName(table.FullName, culture);
 
-                GenerateTable(input + "/PersistenceMongoDB/PersistenceMongoDB.Repository.cst", table, myNamespace, myDatabase, output + "/" + myDatabase + className + "RepositoryMongoDB.cs", culture);
+                GenerateTable(input + "/PersistenceMongoDB/PersistenceMongoDB.Repository.cst", table, myApplication, myNamespace, output + "/" + myApplication + className + "RepositoryMongoDB.cs", culture);
             }
         }
 
         public void GeneratePersistenceMongoDBUnitOfWork(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -1013,15 +1013,15 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "MongoDB" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceMongoDB/PersistenceMongoDB.UnitOfWork.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "UnitOfWorkMongoDB.cs", culture);
+            GenerateTables(input + "/PersistenceMongoDB/PersistenceMongoDB.UnitOfWork.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "UnitOfWorkMongoDB.cs", culture);
         }
 
         #endregion
@@ -1029,7 +1029,7 @@ namespace XCodeSmith
         #region Generate Persistence NHibernate
 
         public void GeneratePersistenceNHibernateMap(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -1038,9 +1038,9 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "NHibernate" + "/Maps";
@@ -1050,12 +1050,12 @@ namespace XCodeSmith
             {
                 string className = ClassName(table.FullName, culture);
                 
-                GenerateTable(input + "/PersistenceNHibernate/PersistenceNHibernate.Map.cst", table, myNamespace, myDatabase, output + "/" + className + "Map.cs", culture);
+                GenerateTable(input + "/PersistenceNHibernate/PersistenceNHibernate.Map.cst", table, myApplication, myNamespace, output + "/" + className + "Map.cs", culture);
             }
         }        
 
         public void GeneratePersistenceNHibernateFactory(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -1064,19 +1064,19 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "NHibernate";
             CreateDirectory(output);
             
-            GenerateTables(input + "/PersistenceNHibernate/PersistenceNHibernate.Factory.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "Factory.cs", culture);
+            GenerateTables(input + "/PersistenceNHibernate/PersistenceNHibernate.Factory.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "Factory.cs", culture);
         }
 
         public void GeneratePersistenceNHibernateGenericRepository(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -1085,19 +1085,19 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "NHibernate" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceNHibernate/PersistenceNHibernate.GenericRepository.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "GenericRepositoryNH.cs", culture);
+            GenerateTables(input + "/PersistenceNHibernate/PersistenceNHibernate.GenericRepository.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "GenericRepositoryNH.cs", culture);
         }
 
         public void GeneratePersistenceNHibernateUnitOfWork(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -1106,15 +1106,15 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "NHibernate" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceNHibernate/PersistenceNHibernate.UnitOfWork.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "UnitOfWorkNH.cs", culture);
+            GenerateTables(input + "/PersistenceNHibernate/PersistenceNHibernate.UnitOfWork.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "UnitOfWorkNH.cs", culture);
         }
         
         #endregion
@@ -1122,7 +1122,7 @@ namespace XCodeSmith
         #region Generate Persistence OData
 
         public void GeneratePersistenceODataDTO(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -1131,9 +1131,9 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "OData" + "/DTOs";
@@ -1143,12 +1143,12 @@ namespace XCodeSmith
             {
                 string className = ClassName(table.FullName, culture);
                 
-                GenerateTable(input + "/PersistenceOData/PersistenceOData.DTO.cst", table, myNamespace, myDatabase, output + "/" + className + "DTO.cs", culture);
+                GenerateTable(input + "/PersistenceOData/PersistenceOData.DTO.cst", table, myApplication, myNamespace, output + "/" + className + "DTO.cs", culture);
             }
         }
 
         public void GeneratePersistenceODataGenericRepository(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -1157,19 +1157,19 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "OData" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceOData/PersistenceOData.GenericRepository.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "GenericRepositoryOData.cs", culture);
+            GenerateTables(input + "/PersistenceOData/PersistenceOData.GenericRepository.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "GenericRepositoryOData.cs", culture);
         }
 
         public void GeneratePersistenceODataUnitOfWork(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -1178,15 +1178,15 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "OData" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceOData/PersistenceOData.UnitOfWork.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "UnitOfWorkOData.cs", culture);
+            GenerateTables(input + "/PersistenceOData/PersistenceOData.UnitOfWork.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "UnitOfWorkOData.cs", culture);
         }
 
         #endregion
@@ -1194,7 +1194,7 @@ namespace XCodeSmith
         #region Generate Persistence RavenDB
 
         public void GeneratePersistenceRavenDBGenericRepository(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
 
@@ -1203,19 +1203,19 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
 
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "RavenDB" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceRavenDB/PersistenceRavenDB.GenericRepository.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "GenericRepositoryRavenDB.cs", culture);
+            GenerateTables(input + "/PersistenceRavenDB/PersistenceRavenDB.GenericRepository.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "GenericRepositoryRavenDB.cs", culture);
         }
 
         public void GeneratePersistenceRavenDBUnitOfWork(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
 
@@ -1224,15 +1224,15 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
 
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "RavenDB" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceRavenDB/PersistenceRavenDB.UnitOfWork.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "UnitOfWorkRavenDB.cs", culture);
+            GenerateTables(input + "/PersistenceRavenDB/PersistenceRavenDB.UnitOfWork.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "UnitOfWorkRavenDB.cs", culture);
         }
 
         #endregion
@@ -1240,7 +1240,7 @@ namespace XCodeSmith
         #region Generate Persistence Redis
 
         public void GeneratePersistenceRedisGenericRepository(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
 
@@ -1249,19 +1249,19 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
 
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "Redis" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceRedis/PersistenceRedis.GenericRepository.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "GenericRepositoryRedis.cs", culture);
+            GenerateTables(input + "/PersistenceRedis/PersistenceRedis.GenericRepository.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "GenericRepositoryRedis.cs", culture);
         }
 
         public void GeneratePersistenceRedisRepository(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
 
@@ -1270,9 +1270,9 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
 
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "Redis" + "/Repositories";
@@ -1282,12 +1282,12 @@ namespace XCodeSmith
             {
                 string className = ClassName(table.FullName, culture);
 
-                GenerateTable(input + "/PersistenceRedis/PersistenceRedis.Repository.cst", table, myNamespace, myDatabase, output + "/" + myDatabase + className + "RepositoryRedis.cs", culture);
+                GenerateTable(input + "/PersistenceRedis/PersistenceRedis.Repository.cst", table, myApplication, myNamespace, output + "/" + myApplication + className + "RepositoryRedis.cs", culture);
             }
         }
 
         public void GeneratePersistenceRedisUnitOfWork(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
 
@@ -1296,15 +1296,15 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
 
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "Redis" + "/UnitOfWork";
             CreateDirectory(output);
 
-            GenerateTables(input + "/PersistenceRedis/PersistenceRedis.UnitOfWork.cst", sourceTables, myNamespace, myDatabase, output + "/" + myDatabase + "UnitOfWorkRedis.cs", culture);
+            GenerateTables(input + "/PersistenceRedis/PersistenceRedis.UnitOfWork.cst", sourceTables, myApplication, myNamespace, output + "/" + myApplication + "UnitOfWorkRedis.cs", culture);
         }
 
         #endregion
@@ -1312,7 +1312,7 @@ namespace XCodeSmith
         #region Generate Data       
 
         public void GenerateDataDataModel(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -1321,9 +1321,9 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "/DataModels";
@@ -1333,38 +1333,12 @@ namespace XCodeSmith
             {
                 string className = ClassName(table.FullName, culture);
                 
-                GenerateTable(input + "/Data/Data.DataModel.cst", table, myNamespace, myDatabase, output + "/" + className + ".cs", culture);
-            }
-        }
-
-        public void GenerateDataProfile(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
-        {
-            string input = this.CodeTemplateInfo.DirectoryName;
-            
-            if (output.Trim() == "")
-            {
-                output = DefaultOutput;
-            }
-            
-            if (IsNullOrEmpty(myDatabase))
-            {
-                myDatabase = myNamespace;
-            }
-
-            output = output + "/" + myNamespace + "/DataProfiles";
-            CreateDirectory(output);            
-
-            foreach (TableSchema table in sourceTables)
-            {
-                string className = ClassName(table.FullName, culture);
-                
-                GenerateTable(input + "/Data/Data.DataProfile.cst", table, myNamespace, myDatabase, output + "/" + className + "Profile.cs", culture);
+                GenerateTable(input + "/Data/Data.DataModel.cst", table, myApplication, myNamespace, output + "/" + className + ".cs", culture);
             }
         }
 
         public void GenerateDataDTO(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -1373,9 +1347,9 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
             }
 
             output = output + "/" + myNamespace + "/DTOs";
@@ -1385,12 +1359,12 @@ namespace XCodeSmith
             {
                 string className = ClassName(table.FullName, culture);
                 
-                GenerateTable(input + "/Data/Data.DTO.cst", table, myNamespace, myDatabase, output + "/" + className + "DTO.cs", culture);
+                GenerateTable(input + "/Data/Data.DTO.cst", table, myApplication, myNamespace, output + "/" + className + "DTO.cs", culture);
             }
         } 
 
-        public void GenerateDataResource(TableSchemaCollection sourceTables,
-            string myNamespace, string myDatabase, string output, Cultures culture)
+        public void GenerateDataProfile(TableSchemaCollection sourceTables,
+            string myApplication, string myNamespace, string output, Cultures culture)
         {
             string input = this.CodeTemplateInfo.DirectoryName;
             
@@ -1399,9 +1373,35 @@ namespace XCodeSmith
                 output = DefaultOutput;
             }
             
-            if (IsNullOrEmpty(myDatabase))
+            if (IsNullOrEmpty(myApplication))
             {
-                myDatabase = myNamespace;
+                myApplication = myNamespace;
+            }
+
+            output = output + "/" + myNamespace + "/DataProfiles";
+            CreateDirectory(output);            
+
+            foreach (TableSchema table in sourceTables)
+            {
+                string className = ClassName(table.FullName, culture);
+                
+                GenerateTable(input + "/Data/Data.DataProfile.cst", table, myApplication, myNamespace, output + "/" + className + "Profile.cs", culture);
+            }
+        }
+
+        public void GenerateDataResource(TableSchemaCollection sourceTables,
+            string myApplication, string myNamespace, string output, Cultures culture)
+        {
+            string input = this.CodeTemplateInfo.DirectoryName;
+            
+            if (output.Trim() == "")
+            {
+                output = DefaultOutput;
+            }
+            
+            if (IsNullOrEmpty(myApplication))
+            {
+                myApplication = myNamespace;
             }
             
             output = output + "/" + myNamespace + "/Resources";
@@ -1411,7 +1411,7 @@ namespace XCodeSmith
             {
                 string className = ClassName(table.FullName, culture);
                 
-                GenerateTable(input + "/Data/Data.Resource.cst", table, myNamespace, myDatabase, output + "/" + className + "Resources.resx", culture);
+                GenerateTable(input + "/Data/Data.Resource.cst", table, myApplication, myNamespace, output + "/" + className + "Resources.resx", culture);
             }
         }
 

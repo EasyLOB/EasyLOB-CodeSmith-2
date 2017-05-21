@@ -1,9 +1,10 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
-<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -17,22 +18,22 @@ using EasyLOB.Security;
 
 namespace <%= Namespace %>
 {
-    public class <%= Database %>UnitOfWorkMongoDB : UnitOfWorkMongoDB, I<%= Database %>UnitOfWork
+    public class <%= Application %>UnitOfWorkMongoDB : UnitOfWorkMongoDB, I<%= Application %>UnitOfWork
     {
         #region Methods
 
-        public <%= Database %>UnitOfWorkMongoDB(IAuthenticationManager authenticationManager)
-            : base(ConfigurationHelper.AppSettings<string>("MongoDB.<%= Database %>.Url"), ConfigurationHelper.AppSettings<string>("MongoDB.<%= Database %>.Database"), authenticationManager)
+        public <%= Application %>UnitOfWorkMongoDB(IAuthenticationManager authenticationManager)
+            : base(ConfigurationHelper.AppSettings<string>("MongoDB.<%= Application %>.Url"), ConfigurationHelper.AppSettings<string>("MongoDB.<%= Application %>.Database"), authenticationManager)
         {           
             Domain = ""; // ???
-            //Domain = "<%= Database %>";
+            //Domain = "<%= Application %>";
 
 <%  foreach (TableSchema table in SourceTables) { %>
-            <%= Database %>MongoDBMap.<%= ClassName(table.Name, Culture) %>Map();
+            <%= Application %>MongoDBMap.<%= ClassName(table.Name, Culture) %>Map();
 <%  } %>
             
 <%  foreach (TableSchema table in SourceTables) { %>
-            Repositories.Add(typeof(<%= ClassName(table.Name, Culture) %>), new <%= Database %><%= ClassName(table.Name, Culture) %>RepositoryMongoDB(this));
+            Repositories.Add(typeof(<%= ClassName(table.Name, Culture) %>), new <%= Application %><%= ClassName(table.Name, Culture) %>RepositoryMongoDB(this));
 <%  } %>
 
             //IMongoDatabase database = base.Database;            
@@ -42,7 +43,7 @@ namespace <%= Namespace %>
         {
             if (!Repositories.Keys.Contains(typeof(TEntity)))
             {
-                var repository = new <%= Database %>GenericRepositoryMongoDB<TEntity>(this);
+                var repository = new <%= Application %>GenericRepositoryMongoDB<TEntity>(this);
                 Repositories.Add(typeof(TEntity), repository);
             }
 

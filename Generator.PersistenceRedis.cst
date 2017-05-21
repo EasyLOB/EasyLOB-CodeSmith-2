@@ -1,15 +1,16 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
+
 <%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
 <%@ Property Name="Output" Type="String" Category="Context" Description="Output Directory" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
-<%@ Property Name="DoPersistenceRedisGenericRepository" Type="Boolean" Default="False" Category="Do" Description="Generate Persistence :: Redis Generic Repository ?" %>
-<%@ Property Name="DoPersistenceRedisRepository" Type="Boolean" Default="False" Category="Do" Description="Generate Persistence :: Redis Repository ?" %>
-<%@ Property Name="DoPersistenceRedisUnitOfWork" Type="Boolean" Default="False" Category="Do" Description="Generate Persistence :: Redis Unit of Work ?" %>
+<%@ Property Name="DoPersistenceRedisGenericRepository" Type="Boolean" Default="False" Category="To-Do" Description="Generate Persistence :: Redis Generic Repository ?" %>
+<%@ Property Name="DoPersistenceRedisRepository" Type="Boolean" Default="False" Category="To-Do" Description="Generate Persistence :: Redis Repository ?" %>
+<%@ Property Name="DoPersistenceRedisUnitOfWork" Type="Boolean" Default="False" Category="To-Do" Description="Generate Persistence :: Redis Unit of Work ?" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
@@ -18,16 +19,16 @@
 <%
 if (DoPersistenceRedisGenericRepository)
 {
-    GeneratePersistenceRedisGenericRepository(SourceTables, Namespace, Database, Output, Culture);    
+    GeneratePersistenceRedisGenericRepository(SourceTables, Application, Namespace, Output, Culture);    
 }
 
 if (DoPersistenceRedisRepository)
 {
-    GeneratePersistenceRedisRepository(SourceTables, Namespace, Database, Output, Culture);
+    GeneratePersistenceRedisRepository(SourceTables, Application, Namespace, Output, Culture);
 }
 
 if (DoPersistenceRedisUnitOfWork)
 {
-    GeneratePersistenceRedisUnitOfWork(SourceTables, Namespace, Database, Output, Culture);
+    GeneratePersistenceRedisUnitOfWork(SourceTables, Application, Namespace, Output, Culture);
 }
 %>

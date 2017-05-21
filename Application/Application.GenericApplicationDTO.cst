@@ -1,9 +1,10 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
-<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -16,14 +17,14 @@ using EasyLOB.Data;
 
 namespace <%= Namespace %>
 {
-    public class <%= Database %>GenericApplicationDTO<TEntityDTO, TEntity>
-        : GenericApplicationDTO<TEntityDTO, TEntity>, I<%= Database %>GenericApplicationDTO<TEntityDTO, TEntity>
+    public class <%= Application %>GenericApplicationDTO<TEntityDTO, TEntity>
+        : GenericApplicationDTO<TEntityDTO, TEntity>, I<%= Application %>GenericApplicationDTO<TEntityDTO, TEntity>
         where TEntityDTO : class, IZDTOBase<TEntityDTO, TEntity>
         where TEntity : class, IZDataBase
     {
         #region Methods
 
-        public <%= Database %>GenericApplicationDTO(I<%= Database %>UnitOfWork unitOfWork, IDIManager diManager)
+        public <%= Application %>GenericApplicationDTO(I<%= Application %>UnitOfWork unitOfWork, IDIManager diManager)
             : base(unitOfWork, diManager)
         {
         }

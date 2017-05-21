@@ -1,8 +1,9 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+
 <%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -12,24 +13,24 @@
 using Microsoft.Practices.Unity;
 using System;
 using System.Linq;
-using <%= Database %>.Data;
-using <%= Database %>.Persistence;
+using <%= Application %>.Data;
+using <%= Application %>.Persistence;
 using EasyLOB;
 using EasyLOB.Data;
 using EasyLOB.Persistence;
 
-namespace <%= Database %>.Shell
+namespace <%= Application %>.Shell
 {
     partial class Program
     {
-        private static void Persistence<%= Database %>Demo()
+        private static void Persistence<%= Application %>Demo()
         {
-            Console.WriteLine("\nPersistence <%= Database %> Demo\n");
+            Console.WriteLine("\nPersistence <%= Application %> Demo\n");
 
             var container = new UnityContainer();
             UnityHelper.RegisterMappings(container);
 
-            IUnitOfWork unitOfWork = (IUnitOfWork)container.Resolve<I<%= Database %>UnitOfWork>();
+            IUnitOfWork unitOfWork = (IUnitOfWork)container.Resolve<I<%= Application %>UnitOfWork>();
             Console.WriteLine(unitOfWork.GetType().FullName + " with " + unitOfWork.DBMS.ToString() + "\n");
 
 <%  foreach (TableSchema SourceTable in SourceTables) {
@@ -50,11 +51,11 @@ namespace <%= Database %>.Shell
         //string keyPropertyType = GetType(column.DataType);
         string keyPropertyType = GetTypeNullable(column.DataType);
         string keyPropertyDbType = GetDbType(column.DataType); %>
-            Persistence<%= Database %>Data<<%= className %>>(unitOfWork);
+            Persistence<%= Application %>Data<<%= className %>>(unitOfWork);
 <%  } %>
         }
 
-        private static void Persistence<%= Database %>Data<TEntity>(IUnitOfWork unitOfWork)
+        private static void Persistence<%= Application %>Data<TEntity>(IUnitOfWork unitOfWork)
             where TEntity : class, IZDataBase
         {
             IGenericRepository<TEntity> repository = unitOfWork.GetRepository<TEntity>();

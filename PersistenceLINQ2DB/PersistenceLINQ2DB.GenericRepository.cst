@@ -1,9 +1,10 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
 
 <%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -15,15 +16,15 @@ using EasyLOB.Persistence;
 
 namespace <%= Namespace %>
 {
-    public class <%= Database %>GenericRepositoryLINQ2DB<TEntity> : GenericRepositoryLINQ2DB<TEntity>, I<%= Database %>GenericRepository<TEntity>
+    public class <%= Application %>GenericRepositoryLINQ2DB<TEntity> : GenericRepositoryLINQ2DB<TEntity>, I<%= Application %>GenericRepository<TEntity>
         where TEntity : class, IZDataBase
     {
         #region Methods
 
-        public <%= Database %>GenericRepositoryLINQ2DB(IUnitOfWork unitOfWork)
+        public <%= Application %>GenericRepositoryLINQ2DB(IUnitOfWork unitOfWork)
             : base(unitOfWork)
         {
-            Connection = (unitOfWork as <%= Database %>UnitOfWorkLINQ2DB).Connection;
+            Connection = (unitOfWork as <%= Application %>UnitOfWorkLINQ2DB).Connection;
         }
 
         #endregion Methods

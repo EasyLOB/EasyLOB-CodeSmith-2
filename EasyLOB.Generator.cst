@@ -2,9 +2,9 @@
 
 <%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
 
-<%@ Property Name="Archetype" Type="XCodeSmith.Archetypes" Category="Context" Description="Controllers Archetype" %>
-<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Output" Type="String" Category="Context" Description="Output Directory" %>
+<%@ Property Name="Archetype" Type="XCodeSmith.Archetypes" Category="Code" Description="Controllers Archetype" %>
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Code" Description="Culture for Plural Rules" %>
+<%@ Property Name="Output" Type="String" Category="Code" Description="Output Directory" %>
 
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
@@ -13,63 +13,93 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%
-
-// <%= Database => <%= Application
-// Namespace => X
-// GenerateDataDataModel(SourceTables, Namespace, Database, Output, Culture); 
-// GenerateDataDataModel(SourceTables, Application, Output, Culture); 
-
 string Namespace;
-string Database = Application;
 
 
 // Data
 
 Namespace = Application + ".Data";
-GenerateDataDataModel(SourceTables, Namespace, Database, Output, Culture); 
-GenerateDataProfile(SourceTables, Namespace, Database, Output, Culture); 
-GenerateDataDTO(SourceTables, Namespace, Database, Output, Culture); 
-GenerateDataResource(SourceTables, Namespace, Database, Output, Culture);
+GenerateDataDataModel(SourceTables, Application, Namespace, Output, Culture); 
+GenerateDataDTO(SourceTables, Application, Namespace, Output, Culture); 
+GenerateDataProfile(SourceTables, Application, Namespace, Output, Culture);
+GenerateDataResource(SourceTables, Application, Namespace, Output, Culture);
 
 
 // Persistence
 
 Namespace = Application + ".Persistence";
-GeneratePersistence(SourceTables, Namespace, Database, Output, Culture); 
+GeneratePersistence(SourceTables, Application, Namespace, Output, Culture); 
 
 
-// Persistence EntityFramework
+// Persistence - EntityFramework
 
 Namespace = Application + ".Persistence";
-GeneratePersistenceEntityFrameworkConfiguration(SourceTables, Namespace, Database, Output, Culture);
-GeneratePersistenceEntityFrameworkDbContext(SourceTables, Namespace, Database, Output, Culture);   
-GeneratePersistenceEntityFrameworkGenericRepository(SourceTables, Namespace, Database, Output, Culture);    
-GeneratePersistenceEntityFrameworkUnitOfWork(SourceTables, Namespace, Database, Output, Culture);
+GeneratePersistenceEntityFrameworkConfiguration(SourceTables, Application, Namespace, Output, Culture);
+GeneratePersistenceEntityFrameworkDbContext(SourceTables, Application, Namespace, Output, Culture);   
+GeneratePersistenceEntityFrameworkGenericRepository(SourceTables, Application, Namespace, Output, Culture);    
+GeneratePersistenceEntityFrameworkUnitOfWork(SourceTables, Application, Namespace, Output, Culture);
+
+
+// Persistence - LINQ2DB
+
+//GeneratePersistenceLINQ2DBDataConnection(SourceTables, Application, Namespace, Output, Culture);   
+//GeneratePersistenceLINQ2DBGenericRepository(SourceTables, Application, Namespace, Output, Culture);    
+//GeneratePersistenceLINQ2DBMap(SourceTables, Application, Namespace, Output, Culture);
+//GeneratePersistenceLINQ2DBRepository(SourceTables, Application, Namespace, Output, Culture);
+//GeneratePersistenceLINQ2DBUnitOfWork(SourceTables, Application, Namespace, Output, Culture);
+
+
+// Persistence - MongoDB
+
+//GeneratePersistenceMongoDBMap(SourceTables, Application, Namespace, Output, Culture);
+//GeneratePersistenceMongoDBGenericRepository(SourceTables, Application, Namespace, Output, Culture);    
+//GeneratePersistenceMongoDBRepository(SourceTables, Application, Namespace, Output, Culture);
+//GeneratePersistenceMongoDBUnitOfWork(SourceTables, Application, Namespace, Output, Culture);
+
+
+// Persistence - NHibernate
+
+//GeneratePersistenceNHibernateMap(SourceTables, Application, Namespace, Output, Culture);
+//GeneratePersistenceNHibernateFactory(SourceTables, Application, Namespace, Output, Culture);   
+//GeneratePersistenceNHibernateGenericRepository(SourceTables, Application, Namespace, Output, Culture);    
+//GeneratePersistenceNHibernateUnitOfWork(SourceTables, Application, Namespace, Output, Culture);
+
+
+// Persistence - RavenDB
+
+//GeneratePersistenceRavenDBGenericRepository(SourceTables, Application, Namespace, Output, Culture);    
+//GeneratePersistenceRavenDBUnitOfWork(SourceTables, Application, Namespace, Output, Culture);
+
+
+// Persistence - Redis
+
+//GeneratePersistenceRedisGenericRepository(SourceTables, Application, Namespace, Output, Culture);    
+//GeneratePersistenceRedisRepository(SourceTables, Application, Namespace, Output, Culture);
+//GeneratePersistenceRedisUnitOfWork(SourceTables, Application, Namespace, Output, Culture);
 
 
 // Application
 
 Namespace = Application + ".Application";
-GenerateApplication(SourceTables, Namespace, Database, Output, Culture); 
+GenerateApplication(SourceTables, Application, Namespace, Output, Culture);
 
 
-// MVC
-
-Namespace = Application + ".Mvc";
-GeneratePresentationMvcController(SourceTables, Namespace, Database, Output, Culture, Archetype);
-GeneratePresentationCollectionModel(SourceTables, Namespace, Database, Output, Culture);
-GeneratePresentationItemModel(SourceTables, Namespace, Database, Output, Culture);
-GeneratePresentationViewModel(SourceTables, Namespace, Database, Output, Culture);
-GeneratePresentationMvcMenu(SourceTables, Namespace, Database, Output, Culture);
-GeneratePresentationMvcPartialViewCollection(SourceTables, Namespace, Database, Output, Culture);
-GeneratePresentationMvcPartialViewItem(SourceTables, Namespace, Database, Output, Culture);
-GeneratePresentationMvcPartialViewLookup(SourceTables, Namespace, Database, Output, Culture);
-GeneratePresentationMvcView(SourceTables, Namespace, Database, Output, Culture);
-
-
-// Web API
+// Service - Web API
 
 Namespace = Application + ".Mvc";
-GenerateServiceWebApiController(SourceTables, Namespace, Database, Output, Culture, Archetype); 
+GenerateServiceWebApiController(SourceTables, Application, Namespace, Output, Culture, Archetype);
 
+
+// Presentation - MVC
+
+Namespace = Application + ".Mvc";
+GeneratePresentationMvcController(SourceTables, Application, Namespace, Output, Culture, Archetype);
+GeneratePresentationCollectionModel(SourceTables, Application, Namespace, Output, Culture);
+GeneratePresentationItemModel(SourceTables, Application, Namespace, Output, Culture);
+GeneratePresentationViewModel(SourceTables, Application, Namespace, Output, Culture);
+GeneratePresentationMvcMenu(SourceTables, Application, Namespace, Output, Culture);
+GeneratePresentationMvcPartialViewCollection(SourceTables, Application, Namespace, Output, Culture);
+GeneratePresentationMvcPartialViewItem(SourceTables, Application, Namespace, Output, Culture);
+GeneratePresentationMvcPartialViewLookup(SourceTables, Application, Namespace, Output, Culture);
+GeneratePresentationMvcView(SourceTables, Application, Namespace, Output, Culture);
 %>

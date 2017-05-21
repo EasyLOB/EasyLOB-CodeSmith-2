@@ -1,19 +1,17 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
+
 <%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
 <%@ Property Name="Output" Type="String" Category="Context" Description="Output Directory" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
-<%@ Property Name="DoDataDataModel" Type="Boolean" Default="False" Category="Do" Description="Generate Data :: Data Models ?" %>
-<%@ Property Name="DoDataProfile" Type="Boolean" Default="False" Category="Do" Description="Generate Data :: Profiles ?" %>
-<%@ Property Name="DoDataDTO" Type="Boolean" Default="False" Category="Do" Description="Generate Data :: DTOs ?" %>
-<%--
-<%@ Property Name="DoDataViewModel" Type="Boolean" Default="False" Category="Do" Description="Generate Data :: View Models ?" %>
---%>
-<%@ Property Name="DoDataResource" Type="Boolean" Default="False" Category="Do" Description="Generate Data :: Resources ?" %>
+<%@ Property Name="DoDataDataModel" Type="Boolean" Default="False" Category="To-Do" Description="Generate Data :: Data Models ?" %>
+<%@ Property Name="DoDataDTO" Type="Boolean" Default="False" Category="To-Do" Description="Generate Data :: DTOs ?" %>
+<%@ Property Name="DoDataProfile" Type="Boolean" Default="False" Category="To-Do" Description="Generate Data :: Data Profiles ?" %>
+<%@ Property Name="DoDataResource" Type="Boolean" Default="False" Category="To-Do" Description="Generate Data :: Resources ?" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
@@ -22,21 +20,21 @@
 <%
 if (DoDataDataModel)
 {
-    GenerateDataDataModel(SourceTables, Namespace, Database, Output, Culture); 
-}
-
-if (DoDataProfile)
-{
-    GenerateDataProfile(SourceTables, Namespace, Database, Output, Culture); 
+    GenerateDataDataModel(SourceTables, Application, Namespace, Output, Culture); 
 }
 
 if (DoDataDTO)
 {
-    GenerateDataDTO(SourceTables, Namespace, Database, Output, Culture); 
+    GenerateDataDTO(SourceTables, Application, Namespace, Output, Culture); 
+}
+
+if (DoDataProfile)
+{
+    GenerateDataProfile(SourceTables, Application, Namespace, Output, Culture); 
 }
 
 if (DoDataResource)
 {
-    GenerateDataResource(SourceTables, Namespace, Database, Output, Culture);
+    GenerateDataResource(SourceTables, Application, Namespace, Output, Culture);
 }
 %>

@@ -1,9 +1,10 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
-<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -16,13 +17,13 @@ using EasyLOB.Data;
 
 namespace <%= Namespace %>
 {
-    public class <%= Database %>GenericApplication<TEntity>
-        : GenericApplication<TEntity>, I<%= Database %>GenericApplication<TEntity>
+    public class <%= Application %>GenericApplication<TEntity>
+        : GenericApplication<TEntity>, I<%= Application %>GenericApplication<TEntity>
         where TEntity : class, IZDataBase
     {
         #region Methods
 
-        public <%= Database %>GenericApplication(I<%= Database %>UnitOfWork unitOfWork, IDIManager diManager)
+        public <%= Application %>GenericApplication(I<%= Application %>UnitOfWork unitOfWork, IDIManager diManager)
             : base(unitOfWork, diManager)
             
         {

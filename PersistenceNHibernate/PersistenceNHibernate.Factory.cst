@@ -1,9 +1,10 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
-<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -17,7 +18,7 @@ using NHibernate.Tool.hbm2ddl;
 
 namespace <%= Namespace %>
 {
-    public static class <%= Database %>Factory
+    public static class <%= Application %>Factory
     {
         #region Fields
 
@@ -27,7 +28,7 @@ namespace <%= Namespace %>
 
         #region Properties
 
-        public static string ConnectionString { get { return "<%= Database %>"; } }
+        public static string ConnectionString { get { return "<%= Application %>"; } }
 
         private static ISessionFactory _sessionFactory = null;
 
@@ -49,7 +50,7 @@ namespace <%= Namespace %>
 <%  } %>                        
                         )
                         //.Mappings(x => x.FluentMappings.AddFromAssemblyOf<?Map>())
-                        //.Mappings(x => x.FluentMappings.AddFromAssembly(typeof(<%= Database %>.?Map).Assembly))
+                        //.Mappings(x => x.FluentMappings.AddFromAssembly(typeof(<%= Application %>.?Map).Assembly))
                         //.Mappings(x => x.FluentMappings.AddFromAssembly(System.Reflection.Assembly.GetExecutingAssembly()))
                         .BuildSessionFactory();
                 }

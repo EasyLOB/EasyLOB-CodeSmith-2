@@ -1,43 +1,44 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
-<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
-using <%= Database %>.Data;
+using <%= Application %>.Data;
 using EasyLOB.Persistence;
 using EasyLOB.Security;
 
 namespace <%= Namespace %>
 {
-    public class <%= Database %>UnitOfWorkLINQ2DB : UnitOfWorkLINQ2DB, I<%= Database %>UnitOfWork
+    public class <%= Application %>UnitOfWorkLINQ2DB : UnitOfWorkLINQ2DB, I<%= Application %>UnitOfWork
     {
         #region Methods
 
-        public <%= Database %>UnitOfWorkLINQ2DB(IAuthenticationManager authenticationManager)
-            : base(new <%= Database %>LINQ2DB(), authenticationManager)
+        public <%= Application %>UnitOfWorkLINQ2DB(IAuthenticationManager authenticationManager)
+            : base(new <%= Application %>LINQ2DB(), authenticationManager)
         {
             Domain = ""; // ???
-            //Domain = "<%= Database %>";
+            //Domain = "<%= Application %>";
 
 <%  foreach (TableSchema table in SourceTables) { %>
-            Repositories.Add(typeof(<%= ClassName(table.Name, Culture) %>), new <%= Database %><%= ClassName(table.Name, Culture) %>RepositoryLINQ2DB(this));            
+            Repositories.Add(typeof(<%= ClassName(table.Name, Culture) %>), new <%= Application %><%= ClassName(table.Name, Culture) %>RepositoryLINQ2DB(this));            
 <%  } %>
 
-            //<%= Database %>LINQ2DB connection = (<%= Database %>LINQ2DB)base.Connection;
+            //<%= Application %>LINQ2DB connection = (<%= Application %>LINQ2DB)base.Connection;
         }
 
         public override IGenericRepository<TEntity> GetRepository<TEntity>()
         {
             if (!Repositories.Keys.Contains(typeof(TEntity)))
             {
-                var repository = new <%= Database %>GenericRepositoryLINQ2DB<TEntity>(this);
+                var repository = new <%= Application %>GenericRepositoryLINQ2DB<TEntity>(this);
                 Repositories.Add(typeof(TEntity), repository);
             }
 

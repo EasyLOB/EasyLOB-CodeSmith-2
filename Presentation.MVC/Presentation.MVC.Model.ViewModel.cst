@@ -1,9 +1,10 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
-<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Database" Description="Table" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -45,13 +46,13 @@ foreach (ColumnSchema column in SourceTable.NonPrimaryKeyColumns) {
 <%--
 
 <%  if (!Namespace.EndsWith(".Data")) { %>
-using <%= Database %>.Data;
+using <%= Application %>.Data;
 <%  } %>
-using <%= Database %>.Data.Resources;
+using <%= Application %>.Data.Resources;
 
 --%>
-using <%= Database %>.Data;
-using <%= Database %>.Data.Resources;
+using <%= Application %>.Data;
+using <%= Application %>.Data.Resources;
 using EasyLOB.Data;
 using EasyLOB.Library;
 using EasyLOB.Resources;

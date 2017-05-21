@@ -1,10 +1,11 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
+
 <%@ Property Name="Archetype" Type="XCodeSmith.Archetypes" Category="Context" Description="Controllers Archetype" %>
 <%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Database" Description="Table" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -36,9 +37,9 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
     pkPropertiesArray += (pkPropertiesArray == "" ? "" : ", ") + objectName + "DTO." + PropertyName(column.Name);
 }
 %>
-using <%= Database %>;
-using <%= Database %>.Application;
-using <%= Database %>.Data;
+using <%= Application %>;
+using <%= Application %>.Application;
+using <%= Application %>.Data;
 using EasyLOB;
 using EasyLOB.Library.WebApi;
 using EasyLOB.Mvc;
@@ -53,7 +54,7 @@ namespace <%= Namespace %>
     {
         #region Methods
 
-        public <%= className %>APIController(I<%= Database %>GenericApplicationDTO<<%= className %>DTO, <%= className %>> application)
+        public <%= className %>APIController(I<%= Application %>GenericApplicationDTO<<%= className %>DTO, <%= className %>> application)
         {
             Application = application;
         }

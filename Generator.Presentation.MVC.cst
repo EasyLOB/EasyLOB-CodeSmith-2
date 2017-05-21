@@ -1,22 +1,23 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
+
 <%@ Property Name="Archetype" Type="XCodeSmith.Archetypes" Category="Context" Description="Controllers Archetype" %>
 <%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
 <%@ Property Name="Output" Type="String" Category="Context" Description="Output Directory" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
-<%@ Property Name="DoPresentationModelCollection" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: Collection Models ?" %>
-<%@ Property Name="DoPresentationModelItem" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: Item Models ?" %>
-<%@ Property Name="DoPresentationModelView" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: View Models ?" %>
-<%@ Property Name="DoPresentationMvcController" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Controllers ?" %>
-<%@ Property Name="DoPresentationMvcMenu" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Menu ?" %>
-<%@ Property Name="DoPresentationMvcPartialViewCollection" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Partial View Collection ?" %>
-<%@ Property Name="DoPresentationMvcPartialViewItem" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Partial View Item ?" %>
-<%@ Property Name="DoPresentationMvcPartialViewLookup" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Partial View Lookup ?" %>
-<%@ Property Name="DoPresentationMvcView" Type="Boolean" Default="False" Category="Do" Description="Generate Presentation :: MVC Views ?" %>
+<%@ Property Name="DoPresentationModelCollection" Type="Boolean" Default="False" Category="To-Do" Description="Generate Presentation :: Collection Models ?" %>
+<%@ Property Name="DoPresentationModelItem" Type="Boolean" Default="False" Category="To-Do" Description="Generate Presentation :: Item Models ?" %>
+<%@ Property Name="DoPresentationModelView" Type="Boolean" Default="False" Category="To-Do" Description="Generate Presentation :: View Models ?" %>
+<%@ Property Name="DoPresentationMvcController" Type="Boolean" Default="False" Category="To-Do" Description="Generate Presentation :: MVC Controllers ?" %>
+<%@ Property Name="DoPresentationMvcMenu" Type="Boolean" Default="False" Category="To-Do" Description="Generate Presentation :: MVC Menu ?" %>
+<%@ Property Name="DoPresentationMvcPartialViewCollection" Type="Boolean" Default="False" Category="To-Do" Description="Generate Presentation :: MVC Partial View Collection ?" %>
+<%@ Property Name="DoPresentationMvcPartialViewItem" Type="Boolean" Default="False" Category="To-Do" Description="Generate Presentation :: MVC Partial View Item ?" %>
+<%@ Property Name="DoPresentationMvcPartialViewLookup" Type="Boolean" Default="False" Category="To-Do" Description="Generate Presentation :: MVC Partial View Lookup ?" %>
+<%@ Property Name="DoPresentationMvcView" Type="Boolean" Default="False" Category="To-Do" Description="Generate Presentation :: MVC Views ?" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
@@ -25,46 +26,46 @@
 <%
 if (DoPresentationMvcController)
 {
-    GeneratePresentationMvcController(SourceTables, Namespace, Database, Output, Culture, Archetype);
+    GeneratePresentationMvcController(SourceTables, Application, Namespace, Output, Culture, Archetype);
 }
 
 if (DoPresentationModelCollection)
 {
-    GeneratePresentationCollectionModel(SourceTables, Namespace, Database, Output, Culture);
+    GeneratePresentationCollectionModel(SourceTables, Application, Namespace, Output, Culture);
 }
 
 if (DoPresentationModelItem)
 {
-    GeneratePresentationItemModel(SourceTables, Namespace, Database, Output, Culture);
+    GeneratePresentationItemModel(SourceTables, Application, Namespace, Output, Culture);
 }
 
 if (DoPresentationModelView)
 {
-    GeneratePresentationViewModel(SourceTables, Namespace, Database, Output, Culture);
+    GeneratePresentationViewModel(SourceTables, Application, Namespace, Output, Culture);
 }
 
 if (DoPresentationMvcMenu)
 {
-    GeneratePresentationMvcMenu(SourceTables, Namespace, Database, Output, Culture);
+    GeneratePresentationMvcMenu(SourceTables, Application, Namespace, Output, Culture);
 }
 
 if (DoPresentationMvcPartialViewCollection)
 {
-    GeneratePresentationMvcPartialViewCollection(SourceTables, Namespace, Database, Output, Culture);
+    GeneratePresentationMvcPartialViewCollection(SourceTables, Application, Namespace, Output, Culture);
 }
 
 if (DoPresentationMvcPartialViewItem)
 {
-    GeneratePresentationMvcPartialViewItem(SourceTables, Namespace, Database, Output, Culture);
+    GeneratePresentationMvcPartialViewItem(SourceTables, Application, Namespace, Output, Culture);
 }
 
 if (DoPresentationMvcPartialViewLookup)
 {
-    GeneratePresentationMvcPartialViewLookup(SourceTables, Namespace, Database, Output, Culture);
+    GeneratePresentationMvcPartialViewLookup(SourceTables, Application, Namespace, Output, Culture);
 }
 
 if (DoPresentationMvcView)
 {
-    GeneratePresentationMvcView(SourceTables, Namespace, Database, Output, Culture);
+    GeneratePresentationMvcView(SourceTables, Application, Namespace, Output, Culture);
 }
 %>

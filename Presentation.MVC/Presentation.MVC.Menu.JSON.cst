@@ -1,8 +1,9 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+
 <%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -15,7 +16,7 @@
     "Url": "/Home"
   },
   {
-    "Text": "<%= Database %>",
+    "Text": "<%= Application %>",
     "SubMenus": [
 <%   int tables = SourceTables.Count;
      int t = 0;
@@ -32,12 +33,12 @@
     "Text": "PresentationResources.Tasks",
     "SubMenus": [
       {
-        "Text": "<%= Database %>PresentationResources.Task<%= Database %>APIIndex",
-        "Url": "/<%= Database %>Tasks/<%= Database %>APIIndex"
+        "Text": "<%= Application %>PresentationResources.Task<%= Application %>APIIndex",
+        "Url": "/<%= Application %>Tasks/<%= Application %>APIIndex"
       },
       {
-        "Text": "<%= Database %>PresentationResources.Task<%= Database %>Status",
-        "Url": "/<%= Database %>Tasks/<%= Database %>Status"
+        "Text": "<%= Application %>PresentationResources.Task<%= Application %>Status",
+        "Url": "/<%= Application %>Tasks/<%= Application %>Status"
       }
     ]
   },

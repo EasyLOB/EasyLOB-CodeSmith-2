@@ -1,9 +1,10 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
-<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -15,15 +16,15 @@ using EasyLOB.Security;
 
 namespace <%= Namespace %>
 {
-    public class <%= Database %>UnitOfWorkNH : UnitOfWorkNH, I<%= Database %>UnitOfWork
+    public class <%= Application %>UnitOfWorkNH : UnitOfWorkNH, I<%= Application %>UnitOfWork
     {
         #region Methods
         
-        public <%= Database %>UnitOfWorkNH(IAuthenticationManager authenticationManager)
-            : base(<%= Database %>Factory.Session, authenticationManager)
+        public <%= Application %>UnitOfWorkNH(IAuthenticationManager authenticationManager)
+            : base(<%= Application %>Factory.Session, authenticationManager)
         {
             Domain = ""; // ???
-            //Domain = "<%= Database %>";
+            //Domain = "<%= Application %>";
 
             //ISession session = base.Session;
         }
@@ -32,7 +33,7 @@ namespace <%= Namespace %>
         {
             if (!Repositories.Keys.Contains(typeof(TEntity)))
             {
-                var repository = new <%= Database %>GenericRepositoryNH<TEntity>(this);
+                var repository = new <%= Application %>GenericRepositoryNH<TEntity>(this);
                 Repositories.Add(typeof(TEntity), repository);
             }
 

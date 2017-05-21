@@ -1,9 +1,10 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
 
 <%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -15,16 +16,16 @@ using EasyLOB.Persistence;
 
 namespace <%= Namespace %>
 {
-    public class <%= Database %>GenericRepositoryRavenDB<TEntity> : GenericRepositoryRavenDB<TEntity>, I<%= Database %>GenericRepository<TEntity>
+    public class <%= Application %>GenericRepositoryRavenDB<TEntity> : GenericRepositoryRavenDB<TEntity>, I<%= Application %>GenericRepository<TEntity>
         where TEntity : class, IZDataBase
     {
         #region Methods
 
-        public <%= Database %>GenericRepositoryRavenDB(IUnitOfWork unitOfWork)
+        public <%= Application %>GenericRepositoryRavenDB(IUnitOfWork unitOfWork)
             : base(unitOfWork)
         {
-            DocumentStore = (unitOfWork as <%= Database %>UnitOfWorkRavenDB).DocumentStore;
-            DocumentSession = (unitOfWork as <%= Database %>UnitOfWorkRavenDB).DocumentSession;            
+            DocumentStore = (unitOfWork as <%= Application %>UnitOfWorkRavenDB).DocumentStore;
+            DocumentSession = (unitOfWork as <%= Application %>UnitOfWorkRavenDB).DocumentSession;            
         }
 
         #endregion Methods

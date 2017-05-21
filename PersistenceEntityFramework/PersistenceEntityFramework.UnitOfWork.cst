@@ -1,9 +1,10 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
-<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -15,24 +16,24 @@ using EasyLOB.Security;
 
 namespace <%= Namespace %>
 {
-    public class <%= Database %>UnitOfWorkEF : UnitOfWorkEF, I<%= Database %>UnitOfWork
+    public class <%= Application %>UnitOfWorkEF : UnitOfWorkEF, I<%= Application %>UnitOfWork
     {
         #region Methods
 
-        public <%= Database %>UnitOfWorkEF(IAuthenticationManager authenticationManager)
-            : base(new <%= Database %>DbContext(), authenticationManager)
+        public <%= Application %>UnitOfWorkEF(IAuthenticationManager authenticationManager)
+            : base(new <%= Application %>DbContext(), authenticationManager)
         {
             Domain = ""; // ???
-            //Domain = "<%= Database %>";
+            //Domain = "<%= Application %>";
 
-            //<%= Database %>DbContext context = (<%= Database %>DbContext)base.context;
+            //<%= Application %>DbContext context = (<%= Application %>DbContext)base.context;
         }
 
         public override IGenericRepository<TEntity> GetRepository<TEntity>()
         {
             if (!Repositories.Keys.Contains(typeof(TEntity)))
             {
-                var repository = new <%= Database %>GenericRepositoryEF<TEntity>(this);
+                var repository = new <%= Application %>GenericRepositoryEF<TEntity>(this);
                 Repositories.Add(typeof(TEntity), repository);
             }
 

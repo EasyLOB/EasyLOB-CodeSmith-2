@@ -1,8 +1,9 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+
 <%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -13,19 +14,19 @@ using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using <%= Database %>.Application;
-using <%= Database %>.Data;
+using <%= Application %>.Application;
+using <%= Application %>.Data;
 using EasyLOB;
 using EasyLOB.Data;
 using EasyLOB.Library;
 
-namespace <%= Database %>.Shell
+namespace <%= Application %>.Shell
 {
     partial class Program
     {
-        private static void Application<%= Database %>Demo()
+        private static void Application<%= Application %>Demo()
         {
-            Console.WriteLine("\nApplication <%= Database %> Demo\n");
+            Console.WriteLine("\nApplication <%= Application %> Demo\n");
 
             var container = new UnityContainer();
             UnityHelper.RegisterMappings(container);
@@ -48,18 +49,18 @@ namespace <%= Database %>.Shell
         string keyPropertyType = GetTypeNullable(column.DataType);
         string keyPropertyDbType = GetDbType(column.DataType); %>
 
-            Application<%= Database %>Data<<%= className %>>(container);
-            Application<%= Database %>DTO<<%= className %>DTO, <%= className %>>(container);
+            Application<%= Application %>Data<<%= className %>>(container);
+            Application<%= Application %>DTO<<%= className %>DTO, <%= className %>>(container);
 <%  } %>
         }
 
-        private static void Application<%= Database %>Data<TEntity>(UnityContainer container)
+        private static void Application<%= Application %>Data<TEntity>(UnityContainer container)
             where TEntity : ZDataBase
         {
             ZOperationResult operationResult = new ZOperationResult();
 
-            <%= Database %>GenericApplication<TEntity> application =
-                (<%= Database %>GenericApplication<TEntity>)container.Resolve<I<%= Database %>GenericApplication<TEntity>>();
+            <%= Application %>GenericApplication<TEntity> application =
+                (<%= Application %>GenericApplication<TEntity>)container.Resolve<I<%= Application %>GenericApplication<TEntity>>();
             IEnumerable<TEntity> enumerable = application.SelectAll(operationResult);
             if (operationResult.Ok)
             {
@@ -71,14 +72,14 @@ namespace <%= Database %>.Shell
             }
         }
 
-        private static void Application<%= Database %>DTO<TEntityDTO, TEntity>(UnityContainer container)
+        private static void Application<%= Application %>DTO<TEntityDTO, TEntity>(UnityContainer container)
             where TEntityDTO : ZDTOBase<TEntityDTO, TEntity>
             where TEntity : ZDataBase
         {
             ZOperationResult operationResult = new ZOperationResult();
 
-            <%= Database %>GenericApplicationDTO<TEntityDTO, TEntity> application =
-                (<%= Database %>GenericApplicationDTO<TEntityDTO, TEntity>)container.Resolve<I<%= Database %>GenericApplicationDTO<TEntityDTO, TEntity>>();
+            <%= Application %>GenericApplicationDTO<TEntityDTO, TEntity> application =
+                (<%= Application %>GenericApplicationDTO<TEntityDTO, TEntity>)container.Resolve<I<%= Application %>GenericApplicationDTO<TEntityDTO, TEntity>>();
             IEnumerable<TEntityDTO> enumerable = application.SelectAll(operationResult);
             if (operationResult.Ok)
             {

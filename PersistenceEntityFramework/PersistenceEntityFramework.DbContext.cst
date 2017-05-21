@@ -1,9 +1,10 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
 
-<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
-<%@ Property Name="Namespace" Type="String" Category="Context" Description="Namespace [using Namespace]" %>
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+<%@ Property Name="Namespace" Type="String" Category="Application" Description="Namespace [using Application.*]" %>
 
-<%@ Property Name="Database" Type="String" Category="Database" Description="Database [using Namespace.Data.Database]" %>
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
 <%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -15,7 +16,7 @@ using System.Data.Entity;
 
 namespace <%= Namespace %>
 {
-    public partial class <%= Database %>DbContext : DbContext
+    public partial class <%= Application %>DbContext : DbContext
     {
         #region Properties
 
@@ -29,34 +30,34 @@ namespace <%= Namespace %>
         
         #region Methods
         
-        static <%= Database %>DbContext()
+        static <%= Application %>DbContext()
         {
             /*
             // Refer to <configuration><entityframework><contexts> section in Web.config or App.config
-            //Database.SetInitializer<<%= Database %>DbContext>(null);
-            //Database.SetInitializer<<%= Database %>DbContext>(new CreateDatabaseIfNotExists<<%= Database %>DbContext>());
+            //Database.SetInitializer<<%= Application %>DbContext>(null);
+            //Database.SetInitializer<<%= Application %>DbContext>(new CreateDatabaseIfNotExists<<%= Application %>DbContext>());
              */            
         }
 
-        public <%= Database %>DbContext()
-            : base("Name=<%= Database %>")
+        public <%= Application %>DbContext()
+            : base("Name=<%= Application %>")
         {
             Setup();
         }
 
-        //public <%= Database %>DbContext(string connectionString)
+        //public <%= Application %>DbContext(string connectionString)
         //    : base(connectionString)
         //{
         //    Setup();
         //}
 
-        //public <%= Database %>DbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
+        //public <%= Application %>DbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
         //    : base(objectContext, dbContextOwnsObjectContext)
         //{
         //    Setup();
         //}        
 
-        //public <%= Database %>DbContext(DbConnection connection)
+        //public <%= Application %>DbContext(DbConnection connection)
         //    : base(connection, false)
         //{
         //    Setup();
