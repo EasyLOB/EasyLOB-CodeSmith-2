@@ -13,9 +13,10 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%
+
 string Namespace;
 
-
+/*
 // Data
 
 Namespace = Application + ".Data";
@@ -23,7 +24,7 @@ GenerateDataDataModel(SourceTables, Application, Namespace, Output, Culture);
 GenerateDataDTO(SourceTables, Application, Namespace, Output, Culture); 
 GenerateDataProfile(SourceTables, Application, Namespace, Output, Culture);
 GenerateDataResource(SourceTables, Application, Namespace, Output, Culture);
-
+*/
 
 // Persistence
 
@@ -102,4 +103,5 @@ GeneratePresentationMvcPartialViewCollection(SourceTables, Application, Namespac
 GeneratePresentationMvcPartialViewItem(SourceTables, Application, Namespace, Output, Culture);
 GeneratePresentationMvcPartialViewLookup(SourceTables, Application, Namespace, Output, Culture);
 GeneratePresentationMvcView(SourceTables, Application, Namespace, Output, Culture);
+
 %>

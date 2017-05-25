@@ -69,10 +69,15 @@ namespace XCodeSmith
         // Default output path
         private string DefaultOutput = "C:/CodeSmith";
         
-        // Rename Classes and Properties using PascalCase and camelCase conventions ?
+        // Use PascalCase and camelCase conventions to rename Classes and Properties ?
         // true  :: Customer => Customer | customer => Customer
         // false :: Customer => Customer | customer => customer 
-        private bool IsCase { get { return true; } }
+        private bool UseCase { get { return true; } }
+        
+        // Ignore UNDERSCORE in Tables and Columns names BEFORE generating C# identifiers ?
+        // true  :: Client_Address => ClientAddress
+        // false  :: Client_Address => Client_Address
+        private bool IgnoreUnderscore { get { return true; } }
         
         #endregion
         
@@ -1423,7 +1428,7 @@ namespace XCodeSmith
         
         public string TableName(string name)
         {
-            if (IsCase)
+            if (UseCase)
             {
                 return name.Replace("dbo.", "");                
             }
@@ -1435,7 +1440,7 @@ namespace XCodeSmith
         
         public string TableAlias(string name)
         {
-            if (IsCase)
+            if (UseCase)
             {
                 return TableName(name).Replace(".", "_");
             }
@@ -1447,7 +1452,7 @@ namespace XCodeSmith
         
         public string ColumnName(string name)
         {
-            if (IsCase)
+            if (UseCase)
             {
                 return name;                
             }
@@ -1475,6 +1480,7 @@ namespace XCodeSmith
             bool isLower = false;
             bool isUnderscore = false;
             string result = ClassWords(name, isLower, ref isUnderscore);            
+            /*
             if (isUnderscore)
             {
                 return Singular(result.Replace(" ", "_"), culture); // Singular
@@ -1483,6 +1489,8 @@ namespace XCodeSmith
             {
                 return Singular(result.Replace(" ", ""), culture); // Singular
             }
+             */
+            return Singular(result.Replace(" ", ""), culture); // Singular
         }
         
         public string ObjectName(string name, Cultures culture)
@@ -1490,7 +1498,7 @@ namespace XCodeSmith
             bool isLower = true;
             bool isUnderscore = false;
             string result = ClassWords(name, isLower, ref isUnderscore);
-
+            /*
             if (isUnderscore)
             {
                 return Singular(result.Replace(" ", "_"), culture); // Singular
@@ -1499,6 +1507,8 @@ namespace XCodeSmith
             {
                 return Singular(result.Replace(" ", ""), culture); // Singular
             }
+             */
+            return Singular(result.Replace(" ", ""), culture); // Singular
         }
 
         public string ClassWords(string name, bool isLower, ref bool isUnderscore)
@@ -1506,7 +1516,11 @@ namespace XCodeSmith
             string result;
             string[] words;
             
-            name = name.Replace("aspnet_", "").Replace("AspNet", "").Replace(" ", ""); // SPACEs are not allowed !
+            name = name.Replace("aspnet_", "").Replace("AspNet", "");
+            if (IgnoreUnderscore)
+            {
+                name = name.Replace("_", "");
+            }
             
             isUnderscore = false;
 
@@ -1517,7 +1531,7 @@ namespace XCodeSmith
                 name = words[1];
             }            
             
-            if (IsCase)
+            if (UseCase)
             {
                 //result = "{" + name + "} " + " [" + StringSplitPascalCase(name) + "]" + " [" + StringSplitPascalCase("UsersInRoles") + "]";
 
@@ -1591,6 +1605,7 @@ namespace XCodeSmith
             bool isLower = false;
             bool isUnderscore = false;
             string result = PropertyWords(name, isLower, ref isUnderscore);            
+            /*
             if (isUnderscore)
             {
                 return result.Replace(" ", "_");
@@ -1599,6 +1614,8 @@ namespace XCodeSmith
             {
                 return result.Replace(" ", "");
             }
+             */
+            return result.Replace(" ", "");
         }
         
         public string LocalName(string name)
@@ -1606,6 +1623,7 @@ namespace XCodeSmith
             bool isLower = true;
             bool isUnderscore = false;
             string result = PropertyWords(name, isLower, ref isUnderscore);            
+            /*
             if (isUnderscore)
             {
                 return result.Replace(" ", "_");
@@ -1614,18 +1632,24 @@ namespace XCodeSmith
             {
                 return result.Replace(" ", "");
             }
+             */
+            return result.Replace(" ", "");
         }
         
         public string PropertyWords(string name, bool isLower, ref bool isUnderscore)
         {
             string result;
             string[] words;            
-            
+                        
             name = name.Replace("aspnet_", "").Replace("AspNet", "");
+            if (IgnoreUnderscore)
+            {
+                name = name.Replace("_", "");
+            }
 
             isUnderscore = false;
             
-            if (IsCase)            
+            if (UseCase)
             {
                 if (name.IndexOf('_') >= 0)
                 {
