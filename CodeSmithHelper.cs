@@ -2313,7 +2313,11 @@ namespace XCodeSmith
             }
             else if (IsString(column.DataType))
             {
-                if (column.Size <= 10) // 9
+                if (column.Size == -1) // char(max) | varchar(max)
+                {                
+                    result = "col-md-4";
+                }
+                else if (column.Size <= 10) // 9
                 {                
                     result = "col-md-1";
                 }
@@ -2364,7 +2368,11 @@ namespace XCodeSmith
             
             if (IsString(column.DataType))
             {
-                if (column.Size <= 5)
+                if (column.Size == -1) // char(max) | varchar(max)
+                {
+                    result = 200;
+                }
+                else if (column.Size <= 5)
                 {
                     result = 50;
                 }
