@@ -16,7 +16,7 @@
 
 string Namespace;
 
-/*
+
 // Data
 
 Namespace = Application + ".Data";
@@ -24,7 +24,7 @@ GenerateDataDataModel(SourceTables, Application, Namespace, Output, Culture);
 GenerateDataDTO(SourceTables, Application, Namespace, Output, Culture); 
 GenerateDataProfile(SourceTables, Application, Namespace, Output, Culture);
 GenerateDataResource(SourceTables, Application, Namespace, Output, Culture);
-*/
+
 
 // Persistence
 
