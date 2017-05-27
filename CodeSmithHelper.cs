@@ -61,7 +61,8 @@ namespace XCodeSmith
                     "CNPJCPF",      // CNPJ + CPF
                     "IERG",         // IE + RG
                     //
-                    "AZ"
+                    "AZ",
+                    "News"
                 };
             }
         }
@@ -98,7 +99,14 @@ namespace XCodeSmith
         
         public string Plural(string s, Cultures culture)
         {
-            if (culture == Cultures.pt_BR)
+            // Case Sensitive
+            //if (Array.IndexOf(Acronyms, s) >= 0) // Is an Acronym
+            // Case Insensitive
+            if (Array.FindIndex(Acronyms, x => x.Equals(s, StringComparison.InvariantCultureIgnoreCase)) >= 0) // Is an Acronym
+            {
+                return s;    
+            }
+            else if (culture == Cultures.pt_BR)
             {
                 return Plural_pt_BR(s);
             }
@@ -170,10 +178,13 @@ namespace XCodeSmith
 
         public string Singular(string s, Cultures culture)
         {
-            if (Array.IndexOf(Acronyms, s) >= 0) // Is an Acronym
+            // Case Sensitive
+            //if (Array.IndexOf(Acronyms, s) >= 0) // Is an Acronym
+            // Case Insensitive
+            if (Array.FindIndex(Acronyms, x => x.Equals(s, StringComparison.InvariantCultureIgnoreCase)) >= 0) // Is an Acronym
             {
                 return s;    
-            }            
+            }
             else if (culture == Cultures.pt_BR)
             {
                 return Singular_pt_BR(s);
