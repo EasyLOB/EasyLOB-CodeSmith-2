@@ -24,8 +24,7 @@ namespace <%= Namespace %>
         public <%= Application %>UnitOfWorkRavenDB(IAuthenticationManager authenticationManager)
             : base(ConfigurationHelper.AppSettings<string>("RavenDB.<%= Application %>.Url"), ConfigurationHelper.AppSettings<string>("RavenDB.<%= Application %>.Database"), authenticationManager)
         {           
-            Domain = ""; // ???
-            //Domain = "<%= Application %>";
+            //Domain = "<%= Application %>"; // ???
 
             //IRavenDatabase database = base.Database;
         }

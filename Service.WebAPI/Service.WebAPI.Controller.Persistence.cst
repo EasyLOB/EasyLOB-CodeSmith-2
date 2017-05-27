@@ -154,16 +154,13 @@ namespace <%= Namespace %>
             {
                 if (IsCreate(operationResult))
                 {
-                    if (IsValid(operationResult, <%= objectName %>DTO))
+                    <%= className %> <%= objectName %> = (<%= className %>)<%= objectName %>DTO.ToData();
+                    if (Repository.Create(operationResult, <%= objectName %>))
                     {
-                        <%= className %> <%= objectName %> = (<%= className %>)<%= objectName %>DTO.ToData();
-                        if (Repository.Create(operationResult, <%= objectName %>))
+                        if (UnitOfWork.Save(operationResult))
                         {
-                            if (UnitOfWork.Save(operationResult))
-                            {
-                                <%= objectName %>DTO = new <%= className %>DTO(<%= objectName %>);
-                                return CreatedAtRoute("DefaultApi", new { <%= pkPropertiesArray %> }, <%= objectName %>DTO);
-                            }
+                            <%= objectName %>DTO = new <%= className %>DTO(<%= objectName %>);
+                            return CreatedAtRoute("DefaultApi", new { <%= pkPropertiesArray %> }, <%= objectName %>DTO);
                         }
                     }
                 }
@@ -186,17 +183,14 @@ namespace <%= Namespace %>
             {
                 if (IsUpdate(operationResult))
                 {
-                    if (IsValid(operationResult, <%= objectName %>DTO))
+                    <%= className %> <%= objectName %> = (<%= className %>)<%= objectName %>DTO.ToData();
+                    if (Repository.Update(operationResult, <%= objectName %>))
                     {
-                        <%= className %> <%= objectName %> = (<%= className %>)<%= objectName %>DTO.ToData();
-                        if (Repository.Update(operationResult, <%= objectName %>))
+                        if (UnitOfWork.Save(operationResult))
                         {
-                            if (UnitOfWork.Save(operationResult))
-                            {
-                                <%= objectName %>DTO = new <%= className %>DTO(<%= objectName %>);
-        
-                                return Ok(<%= objectName %>DTO);
-                            }
+                            <%= objectName %>DTO = new <%= className %>DTO(<%= objectName %>);
+    
+                            return Ok(<%= objectName %>DTO);
                         }
                     }
                 }

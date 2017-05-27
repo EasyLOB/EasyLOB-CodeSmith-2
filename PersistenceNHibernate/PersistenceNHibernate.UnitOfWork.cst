@@ -23,8 +23,7 @@ namespace <%= Namespace %>
         public <%= Application %>UnitOfWorkNH(IAuthenticationManager authenticationManager)
             : base(<%= Application %>Factory.Session, authenticationManager)
         {
-            Domain = ""; // ???
-            //Domain = "<%= Application %>";
+            //Domain = "<%= Application %>"; // ???
 
             //ISession session = base.Session;
         }

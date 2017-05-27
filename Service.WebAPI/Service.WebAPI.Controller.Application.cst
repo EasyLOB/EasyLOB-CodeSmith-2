@@ -136,12 +136,9 @@ namespace <%= Namespace %>
 
             try
             {
-                if (IsValid(operationResult, <%= objectName %>DTO))
+                if (Application.Create(operationResult, <%= objectName %>DTO))
                 {
-                    if (Application.Create(operationResult, <%= objectName %>DTO))
-                    {
-                        return CreatedAtRoute("DefaultApi", new { <%= pkPropertiesArray %> }, <%= objectName %>DTO);
-                    }
+                    return CreatedAtRoute("DefaultApi", new { <%= pkPropertiesArray %> }, <%= objectName %>DTO);
                 }
             }
             catch (Exception exception)
@@ -160,12 +157,9 @@ namespace <%= Namespace %>
 
             try
             {
-                if (IsValid(operationResult, <%= objectName %>DTO))
+                if (Application.Create(operationResult, <%= objectName %>DTO))
                 {
-                    if (Application.Create(operationResult, <%= objectName %>DTO))
-                    {
-                        return Ok(<%= objectName %>DTO);
-                    }
+                    return Ok(<%= objectName %>DTO);
                 }
             }
             catch (Exception exception)

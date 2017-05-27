@@ -24,8 +24,7 @@ namespace <%= Namespace %>
         public <%= Application %>UnitOfWorkLINQ2DB(IAuthenticationManager authenticationManager)
             : base(new <%= Application %>LINQ2DB(), authenticationManager)
         {
-            Domain = ""; // ???
-            //Domain = "<%= Application %>";
+            //Domain = "<%= Application %>"; // ???
 
 <%  foreach (TableSchema table in SourceTables) { %>
             Repositories.Add(typeof(<%= ClassName(table.Name, Culture) %>), new <%= Application %><%= ClassName(table.Name, Culture) %>RepositoryLINQ2DB(this));            

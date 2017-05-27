@@ -26,8 +26,7 @@ namespace <%= Namespace %>
         public <%= Application %>UnitOfWorkRedis(IAuthenticationManager authenticationManager)
             : base(ConfigurationHelper.AppSettings<string>("Redis.<%= Application %>"), authenticationManager)
         {           
-            Domain = ""; // ???
-            //Domain = "<%= Application %>";
+            //Domain = "<%= Application %>"; // ???
 
 <%  foreach (TableSchema table in SourceTables) { %>
             ModelConfig<<%= ClassName(table.Name, Culture) %>>.Id(x => x.<%= PropertyName(table.PrimaryKey.MemberColumns[0].Name) %>);
