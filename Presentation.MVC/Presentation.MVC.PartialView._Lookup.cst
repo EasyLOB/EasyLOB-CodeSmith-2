@@ -142,7 +142,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
                             .TextAlign(TextAlign.Right)<%
         } %>
                             .Visible(<%= className %>.DataProfile.IsGridVisibleFor("<%= PropertyName(column.Name) %>"))
-                            //.Width(<%= className %>.DataProfile.GridWidthFor("<%= PropertyName(column.Name) %>"))
+                            .Width(<%= className %>.DataProfile.GridWidthFor("<%= PropertyName(column.Name) %>"))
                             .Add();
 <%      if (column.IsForeignKeyMember) {
             foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
@@ -151,7 +151,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
                             .AllowEditing(false)
                             .HeaderText(<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>Resources.EntitySingular)
                             .Visible(<%= className %>.DataProfile.IsGridVisibleFor("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText"))
-                            //.Width(<%= className %>.DataProfile.GridWidthFor("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText"))
+                            .Width(<%= className %>.DataProfile.GridWidthFor("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText"))
                             .Add();
 <%              }
             }
