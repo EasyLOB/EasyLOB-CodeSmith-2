@@ -168,38 +168,6 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
                     .PageSettings(page => page
                         .PageSize(AppDefaults.SyncfusionRecordsByPage)
                     )
-                    @*
-                    .SearchSettings(search =>
-                    {
-                        search.Fields(field =>
-                        {
-<%  visible = "";
-    foreach (ColumnSchema column in SourceTable.Columns) {
-        bool columnIsPrimaryKey = column.IsPrimaryKeyMember;
-        bool columnIsForeignKey = column.IsForeignKeyMember;
-        
-        if (columnIsPrimaryKey) {
-            visible = "";
-        } else if (columnIsForeignKey) {
-            visible = "//";
-        } else if (IsString(column.DataType)) {
-            visible = "";
-        } else {
-            visible = "//";
-        }
-        %>
-                            <%= visible %>field.Add("<%= PropertyName(column.Name) %>");
-<%      if (columnIsForeignKey) {
-            foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
-                if (fkTable.ForeignKeyMemberColumns[0].Name == column.Name) { %>
-                            <%= visible %>field.Add("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText");
-<%              }
-            }
-        }
-    } %>
-                        });
-                    })
-                    *@
                     .ShowColumnChooser()
                     .ToolbarSettings(toolbar => toolbar
                         .CustomToolbarItems(new List<object>() {

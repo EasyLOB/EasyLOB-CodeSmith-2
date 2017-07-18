@@ -371,14 +371,17 @@ namespace XCodeSmith
                 myApplication = myNamespace;
             }
 
-            output = output + "/" + myNamespace + "/Models/" + myApplication + "/CollectionModels";
+            output = output + "/" + myNamespace + "/Models/" + myApplication;
             CreateDirectory(output);
 
             foreach (TableSchema table in sourceTables)
             {
                 string className = ClassName(table.FullName, culture);
+                
+                string outputC = output + "/" + className;
+                CreateDirectory(outputC);                
 
-                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.Model.CollectionModel.cst", table, myApplication, myNamespace, output + "/" + className + "CollectionModel.cs", culture);
+                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.Model.CollectionModel.cst", table, myApplication, myNamespace, outputC + "/" + className + "CollectionModel.cs", culture);
             }
         }
 
@@ -397,14 +400,17 @@ namespace XCodeSmith
                 myApplication = myNamespace;
             }
 
-            output = output + "/" + myNamespace + "/Models/" + myApplication + "/ItemModels";
+            output = output + "/" + myNamespace + "/Models/" + myApplication;
             CreateDirectory(output);
 
             foreach (TableSchema table in sourceTables)
             {
                 string className = ClassName(table.FullName, culture);
+                
+                string outputC = output + "/" + className;
+                CreateDirectory(outputC);                
 
-                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.Model.ItemModel.cst", table, myApplication, myNamespace, output + "/" + className + "ItemModel.cs", culture);
+                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.Model.ItemModel.cst", table, myApplication, myNamespace, outputC + "/" + className + "ItemModel.cs", culture);
             }
         }
 
@@ -423,14 +429,17 @@ namespace XCodeSmith
                 myApplication = myNamespace;
             }
 
-            output = output + "/" + myNamespace + "/Models/" + myApplication + "/ViewModels";
+            output = output + "/" + myNamespace + "/Models/" + myApplication;
             CreateDirectory(output);
 
             foreach (TableSchema table in sourceTables)
             {
                 string className = ClassName(table.FullName, culture);
+                
+                string outputC = output + "/" + className;
+                CreateDirectory(outputC);                
 
-                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.Model.ViewModel.cst", table, myApplication, myNamespace, output + "/" + className + "ViewModel.cs", culture);
+                GenerateTable(input + "/Presentation.MVC/Presentation.MVC.Model.ViewModel.cst", table, myApplication, myNamespace, outputC + "/" + className + "ViewModel.cs", culture);
             }
         }
 
