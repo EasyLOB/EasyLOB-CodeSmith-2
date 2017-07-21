@@ -89,15 +89,14 @@ namespace <%= Namespace %>
         }
 
         // GET: api/<%= objectName %>api
-        public IHttpActionResult Get<%= classNamePlural %>()
+        public IHttpActionResult Get<%= classNamePlural %>(string where = null, string orderBy = null, int? skip = null, int? take = null)
         {
             ZOperationResult operationResult = new ZOperationResult();
 
             try
             {
                 return Ok<IEnumerable<<%= className %>DTO>>(Application.Select(operationResult,
-                    null, null, (null as int?), AppDefaults.SyncfusionRecordsBySearch));
-                //return Ok<IEnumerable<<%= className %>DTO>>(Application.SelectAll(operationResult));
+                    where, null, orderBy, skip, take ?? AppDefaults.SyncfusionRecordsBySearch));
             }
             catch (Exception exception)
             {
