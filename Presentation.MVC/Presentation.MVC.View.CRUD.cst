@@ -43,7 +43,7 @@ string objectName = ObjectName(SourceTable.FullName, Culture);
     </div>
 
     <div class="@AppDefaults.CssClassFormButtons">
-        @Ajax.ZImageLink("Button_Cancel", Url.Action("Search", "<%= className %>"), "ZAjax", "z-buttonCancel", PresentationResources.Cancel)
+        @Ajax.ZImageLink("Button_Cancel", Url.Action("Search", "<%= className %>"), "ZAjax", "btn z-buttonCancel", PresentationResources.Cancel)
         @Html.ZImageInput("Button_Save", "btn z-buttonSave", PresentationResources.Save, "$('#<%= className %>_Item_IsSave').val('True');")
         @Html.ZImageInput("Button_OK", "btn z-buttonOk", controllerActionResource)        
     </div> 
