@@ -44,6 +44,7 @@ namespace XCodeSmith
                     "CNPJ",         // Cadastro Nacional de Pessoas Jurídicas    
                     "CPF",          // Cadastro de Pessoas Físicas
                     "CST",          // Código de Situação Tributária
+                    "CTE",          // Conhecimento de Transporte Eletrônico
                     "DDD",          // Discagem Direta a Distância
                     "ICMS",         // Imposto sobre Circulação de Mercadorias e Serviços
                     "ICMSST",       // ICMS Substituição Tributária
