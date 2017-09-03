@@ -29,8 +29,11 @@ string pkParametersArray = ""; // new object[] { parameter1, parameter2, ... };
 string pkParametersIsNull = ""; // parameter1 == null || parameter2 == null || ...
 string pkPropertiesArray = ""; // new object[] { ClassItemModel.Class.Property1, ClassItemModel.Class.Property2, ... };
 //string pkOrderBy = ""; // Property1, Property2, ...
+// Url.Content(String.Format("~/< %= className % >/Update< %= pkUrl1 % >", < %= pkUrl2 % >)));
 string pkUrl1 = ""; // ?Key1={0}&Key2={1}& ...
 string pkUrl2 = ""; //  , objectItemModel.Key1, objectItemModel.Key2, ...
+// Url.Action("Update", "< %= className % >", new { < %= pkObject % > }, Request.Url.Scheme));
+string pkObject = ""; // Key1 = objectItemModel.Key1, Key2 objectItemModel.Key2, ...
 int urlIndex = 0;
 foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
     pkParameters += (pkParameters == "" ? "" : ", ") + GetType(column.DataType, false) + " " + LocalName(column.Name);
@@ -40,6 +43,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
     //pkOrderBy += (pkOrderBy == "" ? "" : ", ") + PropertyName(column.Name);
     pkUrl1 += (pkUrl1 == "" ? "" : "&") + PropertyName(column.Name) + "={" + urlIndex++.ToString() +"}";
     pkUrl2 += (pkUrl2 == "" ? "" : ", ") + objectName +  "." + PropertyName(column.Name);
+    pkObject += (pkObject == "" ? "" : ", ") + PropertyName(column.Name) + " = " + objectName +  "DTO." + PropertyName(column.Name);
 }
 //if (SourceTable.PrimaryKey.MemberColumns.Count > 1) {
     pkParametersArray = "new object[] { " + pkParametersArray + " }";
@@ -204,7 +208,7 @@ namespace <%= Namespace %>
                                     <%= objectName %>ItemModel.OperationResult.StatusMessage =
                                         EasyLOB.Resources.PresentationResources.CreateToUpdate;
                                     return JsonResultSuccess(<%= objectName %>ItemModel.OperationResult,
-                                        Url.Content(String.Format("~/<%= className %>/Update<%= pkUrl1 %>"<%= pkUrl2 %>)));
+                                        Url.Action("Update", "<%= className %>", new { <%= pkObject %> }, Request.Url.Scheme));
                                 }
                                 else
                                 {
@@ -298,7 +302,7 @@ namespace <%= Namespace %>
                                 if (<%= objectName %>ItemModel.IsSave)
                                 {
                                     return JsonResultSuccess(<%= objectName %>ItemModel.OperationResult,
-                                        Url.Content(String.Format("~/<%= className %>/Update<%= pkUrl1 %>"<%= pkUrl2 %>)));
+                                        Url.Action("Update", "<%= className %>", new { <%= pkObject %> }, Request.Url.Scheme));
                                 }
                                 else
                                 {

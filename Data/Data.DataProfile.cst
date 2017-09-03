@@ -153,25 +153,21 @@ namespace <%= Namespace %>
 {
     public partial class <%= className %>
     {
-        #region Dictionaries
+        #region Profile
 
-        public static IZDataProfile DataProfile
+        public static IZDataProfile DataProfile { get; private set; } = new ZDataProfile
         {
-            get
-            {
-                return new ZDataProfile
-                {
-                    Class = new ZClassProfile
-                    (
-                        Name: "<%= className %>",
-                        IsIdentity: <%= isIdentity %>,
-                        Keys: new string[] { <%= keys %> },
-                        Lookup: "<%= lookupProperty %>",
+            Class = new ZClassProfile
+            (
+                Name: "<%= className %>",
+                IsIdentity: <%= isIdentity %>,
+                Keys: new string[] { <%= keys %> },
+                Lookup: "<%= lookupProperty %>",
 <%  if (SourceTable.ForeignKeys.Count == 0) { %>
-                        Associations: new string[] { },
+                Associations: new string[] { },
 <%  } else { %>
-                        Associations: new string[]
-                        {
+                Associations: new string[]
+                {
 <%      comma = ",";
         commaIndex = 1;
         foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
@@ -184,36 +180,36 @@ namespace <%= Namespace %>
             string pkPropertyName = PropertyName(pkColumn.Name);
     
             string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName; %>                        
-                            "<%= pkClassPropertyName %>"<%= comma %>
+                    "<%= pkClassPropertyName %>"<%= comma %>
 <%          if (++commaIndex >= SourceTable.ForeignKeys.Count) {
                 comma = "";
             }
         } %>
-                        },
+                },
 <%  } %>
 <%  if (SourceTable.PrimaryKeys.Count == 0) { %>
-                        CollectionsDictionary: new Dictionary<string, bool> { },
+                CollectionsDictionary: new Dictionary<string, bool> { },
 <%  } else { %>
-                        CollectionsDictionary: new Dictionary<string, bool>
-                        {
+                CollectionsDictionary: new Dictionary<string, bool>
+                {
 <%      comma = ",";
         commaIndex = 1;
         foreach (TableKeySchema primaryKey in SourceTable.PrimaryKeys) {
             string pkClassName = ClassName(primaryKey.ForeignKeyTable.Name, Culture); %>                        
-                            { "<%= Plural(pkClassName, Culture) %>", true }<%= comma %>
+                    { "<%= Plural(pkClassName, Culture) %>", true }<%= comma %>
 <%          if (++commaIndex >= SourceTable.PrimaryKeys.Count) {
                 comma = "";
             }
         } %>
-                        },
+                },
 <%  } %>
-                        LINQOrderBy: "<%= lookupProperty %>",
-                        LINQWhere: "<%= keyLinq %>"
-                    ),
-                    Properties = new List<IZPropertyProfile>
-                    {
-                        //                   Grd    Grd    Grd  Edt    Edt    Edt
-                        //                   Vis    Src    Wdt  Vis    RO     CSS         Name
+                LINQOrderBy: "<%= lookupProperty %>",
+                LINQWhere: "<%= keyLinq %>"
+            ),
+            Properties = new List<IZPropertyProfile>
+            {
+                //                   Grd    Grd    Grd  Edt    Edt    Edt
+                //                   Vis    Src    Wdt  Vis    RO     CSS         Name
 <%  int gridVisibles = 0;
     int columns = 0;
     comma = ",";
@@ -256,16 +252,14 @@ namespace <%= Namespace %>
         string editReadOnly = "false";
         string editWidthCSS = BootstrapWidth(column);
         string fkTable = FKTableName(SourceTable, column).Replace("dbo.", ""); %>
-                        new ZPropertyProfile(<%= gridVisible %>, <%= gridSearch %>, <%= gridWidth %>, <%= editVisible %>, <%= editReadOnly %>, "<%= editWidthCSS %>", "<%= PropertyName(column.Name) %>")<%= columnIsForeignKey ? "," : comma %>
+                new ZPropertyProfile(<%= gridVisible %>, <%= gridSearch %>, <%= gridWidth %>, <%= editVisible %>, <%= editReadOnly %>, "<%= editWidthCSS %>", "<%= PropertyName(column.Name) %>")<%= columnIsForeignKey ? "," : comma %>
 <%      if (columnIsForeignKey) { %>                        
-                        new ZPropertyProfile(true , true , 200, false, false, "col-md-4", "<%= ClassName(fkTable, Culture) %>LookupText")<%= comma %>
+                new ZPropertyProfile(true , true , 200, false, false, "col-md-4", "<%= ClassName(fkTable, Culture) %>LookupText")<%= comma %>
 <%      }
     } %>
-                    }
-                };
             }
-        }
+        };
 
-        #endregion Dictionaries
+        #endregion Profile
     }
 }
