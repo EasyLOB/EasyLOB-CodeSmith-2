@@ -57,6 +57,7 @@ namespace XCodeSmith
                     "NCM",          // Nomeclatura Comum do Mercosul
                     "NF",           // Nota Fiscal
                     "Pais",         // País
+                    "PD",           // Pedido
                     "RG",           // Registro Geral
                     "UF",           // Unidade da Federação
                     "CNPJCPF",      // CNPJ + CPF
