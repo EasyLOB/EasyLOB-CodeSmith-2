@@ -101,8 +101,8 @@ namespace <%= Namespace %>
             UnitOfWork = unitOfWork;
         }
         
-        #endregion
-        
+        #endregion Methods
+
         #region Methods SCRUD
 
         // GET: <%= className %>
