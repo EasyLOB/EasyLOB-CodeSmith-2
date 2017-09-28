@@ -71,6 +71,21 @@ namespace XCodeSmith
         
         // Default output path
         private string DefaultOutput = "C:/CodeSmith";
+
+        // Expressions that should removed in Classes and Properties Names
+        // Array.IndexOf(Expressions, name) < 0
+        private string[] Expressions
+        {
+            get
+            {
+                return new string[]
+                {
+                    "aspnet_",
+                    "AspNet",
+                    "TB_"
+                };
+            }
+        }        
         
         // Use PascalCase and camelCase conventions to rename Classes and Properties ?
         // true  :: Customer => Customer | customer => Customer
@@ -1538,7 +1553,10 @@ namespace XCodeSmith
             string result;
             string[] words;
             
-            name = name.Replace("aspnet_", "").Replace("AspNet", "");
+            foreach (string expression in Expressions)
+            {
+                name = name.Replace(expression, "");
+            }
             if (IgnoreUnderscore)
             {
                 name = name.Replace("_", "");
@@ -1663,7 +1681,10 @@ namespace XCodeSmith
             string result;
             string[] words;            
                         
-            name = name.Replace("aspnet_", "").Replace("AspNet", "");
+            foreach (string expression in Expressions)
+            {
+                name = name.Replace(expression, "");
+            }
             if (IgnoreUnderscore)
             {
                 name = name.Replace("_", "");
