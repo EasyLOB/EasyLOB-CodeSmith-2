@@ -111,17 +111,22 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
                             .AllowEditing(false)<%
         }
         if (IsBoolean(column.DataType)) { %>
+                            .Type("boolean")
                             .EditType(EditingType.Boolean)<%
         } else if (IsDate(column.DataType)) { %>
+                            .Type("date")
                             .EditType(EditingType.Datepicker)
                             .Format(SyncfusionPatternResources.GridFormat_Date)<%
         } else if (IsTime(column.DataType)) { %>
+                            .Type("datetime")
                             .EditType(EditingType.DateTimePicker)
                             .Format(SyncfusionPatternResources.GridFormat_Time)<%
         } else if (IsDateTime(column.DataType)) { %>
+                            .Type("datetime")
                             .EditType(EditingType.DateTimePicker)
                             .Format(SyncfusionPatternResources.GridFormat_DateTime)<%
         } else if (IsDecimal(column.DataType) || IsFloat(column.DataType) || IsInteger(column.DataType)) { %>
+                            .Type("number")
                             .EditType(EditingType.Numeric)<%
             if (IsDecimal(column.DataType) || IsFloat(column.DataType)) { %>
                             .Format(SyncfusionPatternResources.GridFormat_Float)<%
@@ -129,6 +134,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
                             .Format(SyncfusionPatternResources.GridFormat_Integer)<%
             }
         } else { %>
+                            .Type("string")
                             .EditType(EditingType.String)<%
         } %>
                             .HeaderText(<%= className %>Resources.Property<%= PropertyName(column.Name) %>)<%
@@ -149,6 +155,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
                 if (fkTable.ForeignKeyMemberColumns[0].Name == column.Name) { %>
                         column.Field("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText")
                             .AllowEditing(false)
+                            .Type("string")
                             .HeaderText(<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>Resources.EntitySingular)
                             .Visible(<%= className %>.DataProfile.IsGridVisibleFor("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText"))
                             .Width(<%= className %>.DataProfile.GridWidthFor("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText"))
