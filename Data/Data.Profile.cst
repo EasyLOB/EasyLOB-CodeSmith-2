@@ -155,19 +155,19 @@ namespace <%= Namespace %>
     {
         #region Profile
 
-        public static IZDataProfile DataProfile { get; private set; } = new ZDataProfile
-        {
-            Class = new ZClassProfile
-            (
-                Name: "<%= className %>",
-                IsIdentity: <%= isIdentity %>,
-                Keys: new string[] { <%= keys %> },
-                Lookup: "<%= lookupProperty %>",
+        public static IZProfile Profile { get; private set; } = new ZProfile
+        (
+            Name: "<%= className %>",
+            IsIdentity: <%= isIdentity %>,
+            Keys: new string[] { <%= keys %> },
+            Lookup: "<%= lookupProperty %>",
+            LINQOrderBy: "<%= lookupProperty %>",
+            LINQWhere: "<%= keyLinq %>",
 <%  if (SourceTable.ForeignKeys.Count == 0) { %>
-                Associations: new string[] { },
+            Associations: new string[] { },
 <%  } else { %>
-                Associations: new string[]
-                {
+            Associations: new string[]
+            {
 <%      comma = ",";
         commaIndex = 1;
         foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
@@ -185,13 +185,13 @@ namespace <%= Namespace %>
                 comma = "";
             }
         } %>
-                },
+            },
 <%  } %>
 <%  if (SourceTable.PrimaryKeys.Count == 0) { %>
-                CollectionsDictionary: new Dictionary<string, bool> { },
+            Collections: new Dictionary<string, bool> { },
 <%  } else { %>
-                CollectionsDictionary: new Dictionary<string, bool>
-                {
+            Collections: new Dictionary<string, bool>
+            {
 <%      comma = ",";
         commaIndex = 1;
         foreach (TableKeySchema primaryKey in SourceTable.PrimaryKeys) {
@@ -201,12 +201,9 @@ namespace <%= Namespace %>
                 comma = "";
             }
         } %>
-                },
+            },
 <%  } %>
-                LINQOrderBy: "<%= lookupProperty %>",
-                LINQWhere: "<%= keyLinq %>"
-            ),
-            Properties = new List<IZPropertyProfile>
+            Properties: new List<IZProfileProperty>
             {
                 //                   Grd    Grd    Grd  Edt    Edt    Edt
                 //                   Vis    Src    Wdt  Vis    RO     CSS         Name
@@ -252,13 +249,13 @@ namespace <%= Namespace %>
         string editReadOnly = "false";
         string editWidthCSS = BootstrapWidth(column);
         string fkTable = FKTableName(SourceTable, column).Replace("dbo.", ""); %>
-                new ZPropertyProfile(<%= gridVisible %>, <%= gridSearch %>, <%= gridWidth %>, <%= editVisible %>, <%= editReadOnly %>, "<%= editWidthCSS %>", "<%= PropertyName(column.Name) %>")<%= columnIsForeignKey ? "," : comma %>
+                new ZProfileProperty(<%= gridVisible %>, <%= gridSearch %>, <%= gridWidth %>, <%= editVisible %>, <%= editReadOnly %>, "<%= editWidthCSS %>", "<%= PropertyName(column.Name) %>")<%= columnIsForeignKey ? "," : comma %>
 <%      if (columnIsForeignKey) { %>                        
-                new ZPropertyProfile(true , true , 200, false, false, "col-md-4", "<%= ClassName(fkTable, Culture) %>LookupText")<%= comma %>
+                new ZProfileProperty(true , true , 200, false, false, "col-md-4", "<%= ClassName(fkTable, Culture) %>LookupText")<%= comma %>
 <%      }
     } %>
             }
-        };
+        );
 
         #endregion Profile
     }

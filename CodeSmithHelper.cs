@@ -1420,14 +1420,14 @@ namespace XCodeSmith
                 myApplication = myNamespace;
             }
 
-            output = output + "/" + myNamespace + "/DataProfiles";
+            output = output + "/" + myNamespace + "/Profiles";
             CreateDirectory(output);            
 
             foreach (TableSchema table in sourceTables)
             {
                 string className = ClassName(table.FullName, culture);
                 
-                GenerateTable(input + "/Data/Data.DataProfile.cst", table, myApplication, myNamespace, output + "/" + className + "Profile.cs", culture);
+                GenerateTable(input + "/Data/Data.Profile.cst", table, myApplication, myNamespace, output + "/" + className + "Profile.cs", culture);
             }
         }
 
