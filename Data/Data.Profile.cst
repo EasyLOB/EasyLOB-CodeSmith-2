@@ -159,14 +159,14 @@ namespace <%= Namespace %>
         (
             Name: "<%= className %>",
             IsIdentity: <%= isIdentity %>,
-            Keys: new string[] { <%= keys %> },
+            Keys: new List<string> { <%= keys %> },
             Lookup: "<%= lookupProperty %>",
             LINQOrderBy: "<%= lookupProperty %>",
             LINQWhere: "<%= keyLinq %>",
 <%  if (SourceTable.ForeignKeys.Count == 0) { %>
-            Associations: new string[] { },
+            Associations: new List<string> { },
 <%  } else { %>
-            Associations: new string[]
+            Associations: new List<string>
             {
 <%      comma = ",";
         commaIndex = 1;
