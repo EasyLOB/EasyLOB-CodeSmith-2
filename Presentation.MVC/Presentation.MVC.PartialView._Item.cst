@@ -83,7 +83,7 @@ string keyProperty = PropertyName(keyColumn.Name);
 <%          if (column.IsForeignKeyMember) {
                 string fkClassName = ClassName(FKTableName(SourceTable, column), Culture);
                 string fkObjectName = ObjectName(fkClassName, Culture); %>
-                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditWidthCSSFor("<%= fkClassName %>LookupText")">
+                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditCSSFor("<%= fkClassName %>LookupText")">
                     @Html.LabelFor(model => model.<%= className %>.<%= propertyName %>, new { @class = AppDefaults.<%= cssClassLabel %> })
                     @Html.EditorFor(model => model.<%= className %>.<%= propertyName %>, new { htmlAttributes = new { @class = AppDefaults.CssClassEditor, id = "<%= className %>_<%= propertyName %>" } })
                     @{
@@ -94,25 +94,25 @@ string keyProperty = PropertyName(keyColumn.Name);
                         });
                     }
 <%          } else if (IsDate(column.DataType)) { %>
-                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditWidthCSSFor("<%= propertyName %>")">
+                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditCSSFor("<%= propertyName %>")">
                     @Html.LabelFor(model => model.<%= className %>.<%= propertyName %>, new { @class = AppDefaults.<%= cssClassLabel %> })
                     @* @Html.EditorFor(model => model.<%= className %>.<%= propertyName %>, new { htmlAttributes = new { @class = AppDefaults.CssClassEditor, id = "<%= className %>_<%= propertyName %>" } }) *@
                     @Html.EJ().DatePickerFor(model => model.<%= className %>.<%= propertyName %>, AppHelper.DateModel, new { id = "<%= className %>_<%= propertyName %>" })
 <%          } else if (IsDateTime(column.DataType)) { %>
-                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditWidthCSSFor("<%= propertyName %>")">
+                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditCSSFor("<%= propertyName %>")">
                     @Html.LabelFor(model => model.<%= className %>.<%= propertyName %>, new { @class = AppDefaults.<%= cssClassLabel %> })
                     @* @Html.EditorFor(model => model.<%= className %>.<%= propertyName %>, new { htmlAttributes = new { @class = AppDefaults.CssClassEditor, id = "<%= className %>_<%= propertyName %>" } }) *@
                     @Html.EJ().DateTimePickerFor(model => model.<%= className %>.<%= propertyName %>, AppHelper.DateTimeModel, new { id = "<%= className %>_<%= propertyName %>" })
 <%          } else if (IsImage(column)) { %>
-                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditWidthCSSFor("<%= propertyName %>")">
+                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditCSSFor("<%= propertyName %>")">
                     @Html.LabelFor(model => model.<%= className %>.<%= propertyName %>, new { @class = AppDefaults.<%= cssClassLabel %> })
                     <img src="@<%= objectName %>_<%= propertyName %>_Source" class="z-image" />
 <%          } else if (IsBoolean(column.DataType)) { %>
-                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditWidthCSSFor("<%= propertyName %>")">
+                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditCSSFor("<%= propertyName %>")">
                     @Html.LabelFor(model => model.<%= className %>.<%= propertyName %>, new { @class = AppDefaults.<%= cssClassLabel %> })
                     @Html.EditorFor(model => model.<%= className %>.<%= propertyName %>, new { htmlAttributes = new { @class = AppDefaults.CssClassEditor, id = "<%= className %>_<%= propertyName %>" } })
 <%          } else { %>
-                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditWidthCSSFor("<%= propertyName %>")">
+                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditCSSFor("<%= propertyName %>")">
                     @Html.LabelFor(model => model.<%= className %>.<%= propertyName %>, new { @class = AppDefaults.<%= cssClassLabel %> })
                     @Html.EditorFor(model => model.<%= className %>.<%= propertyName %>, new { htmlAttributes = new { @class = AppDefaults.CssClassEditor, id = "<%= className %>_<%= propertyName %>" } })
 <%          } %>
