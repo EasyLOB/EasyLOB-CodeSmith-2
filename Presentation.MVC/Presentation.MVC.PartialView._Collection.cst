@@ -147,8 +147,8 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
         if (IsDecimal(column.DataType) || IsFloat(column.DataType) || IsInteger(column.DataType)) { %>
                 .TextAlign(TextAlign.Right)<%
         } %>
-                .Visible(<%= className %>.DataProfile.IsGridVisibleFor("<%= PropertyName(column.Name) %>"))
-                .Width(<%= className %>.DataProfile.GridWidthFor("<%= PropertyName(column.Name) %>"))
+                .Visible(<%= className %>.Profile.IsGridVisibleFor("<%= PropertyName(column.Name) %>"))
+                .Width(<%= className %>.Profile.GridWidthFor("<%= PropertyName(column.Name) %>"))
                 .Add();
 <%      if (columnIsForeignKey) {
             foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
@@ -157,8 +157,8 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
                 .AllowEditing(false)
                 .Type("string")
                 .HeaderText(<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>Resources.EntitySingular)
-                .Visible(<%= className %>.DataProfile.IsGridVisibleFor("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText"))
-                .Width(<%= className %>.DataProfile.GridWidthFor("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText"))
+                .Visible(<%= className %>.Profile.IsGridVisibleFor("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText"))
+                .Width(<%= className %>.Profile.GridWidthFor("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText"))
                 .Add();
 <%              }
             }
@@ -217,9 +217,9 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
             ej.widget.init($("#Collection_<%= className %>"));
 
             var model = @Html.Raw(JsonConvert.SerializeObject(Model));
-            var dataProfile = @Html.Raw(JsonConvert.SerializeObject(<%= className %>.DataProfile));
+            profile = @Html.Raw(JsonConvert.SerializeObject(<%= className %>.Profile));
 
-            zOnCollectionView(model, dataProfile, "@Url.Action("DataSource", "<%= className %>")");
+            zOnCollectionView(model, profile, "@Url.Action("DataSource", "<%= className %>")");
         } catch (exception) {
             zAlert(zExceptionMessage("@CSHTML", "function", exception));
         }                

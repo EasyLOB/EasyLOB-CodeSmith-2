@@ -83,7 +83,7 @@ string keyProperty = PropertyName(keyColumn.Name);
 <%          if (column.IsForeignKeyMember) {
                 string fkClassName = ClassName(FKTableName(SourceTable, column), Culture);
                 string fkObjectName = ObjectName(fkClassName, Culture); %>
-                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.DataProfile.EditWidthCSSFor("<%= fkClassName %>LookupText")">
+                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditWidthCSSFor("<%= fkClassName %>LookupText")">
                     @Html.LabelFor(model => model.<%= className %>.<%= propertyName %>, new { @class = AppDefaults.<%= cssClassLabel %> })
                     @Html.EditorFor(model => model.<%= className %>.<%= propertyName %>, new { htmlAttributes = new { @class = AppDefaults.CssClassEditor, id = "<%= className %>_<%= propertyName %>" } })
                     @{
@@ -94,25 +94,25 @@ string keyProperty = PropertyName(keyColumn.Name);
                         });
                     }
 <%          } else if (IsDate(column.DataType)) { %>
-                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.DataProfile.EditWidthCSSFor("<%= propertyName %>")">
+                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditWidthCSSFor("<%= propertyName %>")">
                     @Html.LabelFor(model => model.<%= className %>.<%= propertyName %>, new { @class = AppDefaults.<%= cssClassLabel %> })
                     @* @Html.EditorFor(model => model.<%= className %>.<%= propertyName %>, new { htmlAttributes = new { @class = AppDefaults.CssClassEditor, id = "<%= className %>_<%= propertyName %>" } }) *@
                     @Html.EJ().DatePickerFor(model => model.<%= className %>.<%= propertyName %>, AppHelper.DateModel, new { id = "<%= className %>_<%= propertyName %>" })
 <%          } else if (IsDateTime(column.DataType)) { %>
-                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.DataProfile.EditWidthCSSFor("<%= propertyName %>")">
+                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditWidthCSSFor("<%= propertyName %>")">
                     @Html.LabelFor(model => model.<%= className %>.<%= propertyName %>, new { @class = AppDefaults.<%= cssClassLabel %> })
                     @* @Html.EditorFor(model => model.<%= className %>.<%= propertyName %>, new { htmlAttributes = new { @class = AppDefaults.CssClassEditor, id = "<%= className %>_<%= propertyName %>" } }) *@
                     @Html.EJ().DateTimePickerFor(model => model.<%= className %>.<%= propertyName %>, AppHelper.DateTimeModel, new { id = "<%= className %>_<%= propertyName %>" })
 <%          } else if (IsImage(column)) { %>
-                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.DataProfile.EditWidthCSSFor("<%= propertyName %>")">
+                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditWidthCSSFor("<%= propertyName %>")">
                     @Html.LabelFor(model => model.<%= className %>.<%= propertyName %>, new { @class = AppDefaults.<%= cssClassLabel %> })
                     <img src="@<%= objectName %>_<%= propertyName %>_Source" class="z-image" />
 <%          } else if (IsBoolean(column.DataType)) { %>
-                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.DataProfile.EditWidthCSSFor("<%= propertyName %>")">
+                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditWidthCSSFor("<%= propertyName %>")">
                     @Html.LabelFor(model => model.<%= className %>.<%= propertyName %>, new { @class = AppDefaults.<%= cssClassLabel %> })
                     @Html.EditorFor(model => model.<%= className %>.<%= propertyName %>, new { htmlAttributes = new { @class = AppDefaults.CssClassEditor, id = "<%= className %>_<%= propertyName %>" } })
 <%          } else { %>
-                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.DataProfile.EditWidthCSSFor("<%= propertyName %>")">
+                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditWidthCSSFor("<%= propertyName %>")">
                     @Html.LabelFor(model => model.<%= className %>.<%= propertyName %>, new { @class = AppDefaults.<%= cssClassLabel %> })
                     @Html.EditorFor(model => model.<%= className %>.<%= propertyName %>, new { htmlAttributes = new { @class = AppDefaults.CssClassEditor, id = "<%= className %>_<%= propertyName %>" } })
 <%          } %>
@@ -149,7 +149,7 @@ string keyProperty = PropertyName(keyColumn.Name);
             ej.widget.init($("#Item_<%= className %>"));
 
             var model = @Html.Raw(JsonConvert.SerializeObject(Model));
-            var dataProfile = @Html.Raw(JsonConvert.SerializeObject(<%= className %>.DataProfile));
+            var profile = @Html.Raw(JsonConvert.SerializeObject(<%= className %>.Profile));
             var controllerAction = model.ControllerAction == null ? "" : model.ControllerAction.toLowerCase();
 
             var ajaxUrl = "";
@@ -159,7 +159,7 @@ string keyProperty = PropertyName(keyColumn.Name);
         foreach (ColumnSchema column in primaryKey.PrimaryKeyMemberColumns) {
             string fkPropertyName = PropertyName(column.Name);
             string pkPropertyName = PropertyName(primaryKey.ForeignKeyMemberColumns[index].Name); %>
-            if (controllerAction != "create" && zContains(dataProfile.EditCollections, "<%= Plural(pkClassName, Culture) %>")) {
+            if (controllerAction != "create" && zContains(profile.EditCollections, "<%= Plural(pkClassName, Culture) %>")) {
                 // <%= Plural(pkClassName, Culture) %>
                 zUrlDictionaryWrite("<%= pkClassName %>", "@Context.Request.Url.AbsoluteUri");
                 ajaxUrl = "@(Html.Raw(Url.Action("Search", "<%= pkClassName %>", new { MasterControllerAction = Model.ControllerAction, Master<%= pkPropertyName %> = Model.<%= className %>.<%= fkPropertyName %> })))";
@@ -169,7 +169,7 @@ string keyProperty = PropertyName(keyColumn.Name);
         }
     } %>
 
-            if (controllerAction != "create" || dataProfile.Class.IsIdentity) {
+            if (controllerAction != "create" || profile.Class.IsIdentity) {
 <%  foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
         string propertyName = PropertyName(column.Name); %>
                 $("#Group_<%= className %>_<%= propertyName %>").hide();
@@ -193,7 +193,7 @@ string keyProperty = PropertyName(keyColumn.Name);
             }
 <%  } %>
 
-            zOnItemView(model, dataProfile);        
+            zOnItemView(model, profile);        
         } catch (exception) {
             zAlert(zExceptionMessage("@CSHTML", "function", exception));
         }
