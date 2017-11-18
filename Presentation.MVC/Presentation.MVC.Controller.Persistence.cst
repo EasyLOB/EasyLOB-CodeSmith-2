@@ -386,8 +386,9 @@ namespace <%= Namespace %>
         [HttpPost]
         public ActionResult DataSource(DataManager dataManager)
         {
-            IEnumerable data = new List<<%= className %>ViewModel>();
-            int countAll = 0;
+            SyncfusionDataResult dataResult = new SyncfusionDataResult();
+            dataResult.result = new List<<%= className %>ViewModel>();
+
             ZOperationResult operationResult = new ZOperationResult();
             
             if (IsSearch(operationResult))
@@ -403,7 +404,7 @@ namespace <%= Namespace %>
         
                     if (dataManager.RequiresCounts)
                     {
-                        countAll = Repository.Count(where, args.ToArray());
+                        dataResult.count = Repository.Count(where, args.ToArray());
                     }
                 }
                 catch (Exception exception)
@@ -417,7 +418,7 @@ namespace <%= Namespace %>
                 throw new InvalidOperationException(operationResult.Text);
             }
 
-            return Json(JsonConvert.SerializeObject(new { result = data, count = countAll }), JsonRequestBehavior.AllowGet);
+            return Json(JsonConvert.SerializeObject(dataResult), JsonRequestBehavior.AllowGet);
         } 
 
         // POST: <%= className %>/ExportToExcel
