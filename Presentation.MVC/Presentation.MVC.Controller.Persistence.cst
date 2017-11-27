@@ -114,14 +114,17 @@ namespace <%= Namespace %>
 
             try
             {
-                IsOperation(<%= objectName %>CollectionModel.OperationResult);
+                if (IsIndex(<%= objectName %>CollectionModel.OperationResult))
+                {
+                    return View(<%= objectName %>CollectionModel);
+                }
             }
             catch (Exception exception)
             {
                 <%= objectName %>CollectionModel.OperationResult.ParseException(exception);
             }
 
-            return View(<%= objectName %>CollectionModel);
+            return View("OperationResult", new OperationResultViewModel(<%= objectName %>CollectionModel.OperationResult));
         }
 
         // GET & POST: <%= className %>/Search
