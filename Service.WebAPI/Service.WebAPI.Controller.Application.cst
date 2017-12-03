@@ -95,7 +95,7 @@ namespace <%= Namespace %>
 
             try
             {
-                return Ok<IEnumerable<<%= className %>DTO>>(Application.Select(operationResult,
+                return Ok<IEnumerable<<%= className %>DTO>>(Application.Search(operationResult,
                     where, null, orderBy, skip, take ?? AppDefaults.SyncfusionRecordsBySearch));
             }
             catch (Exception exception)

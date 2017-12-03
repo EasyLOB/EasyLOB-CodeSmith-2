@@ -107,7 +107,7 @@ namespace <%= Namespace %>
                 if (IsSearch(operationResult))
                 {
                     return Ok<IEnumerable<<%= className %>DTO>>(ZDTOHelper<<%= className %>DTO, <%= className %>>
-                        .ToDTOList(Repository.Select(where, null, orderBy, skip, take ?? AppDefaults.SyncfusionRecordsBySearch)));
+                        .ToDTOList(Repository.Search(where, null, orderBy, skip, take ?? AppDefaults.SyncfusionRecordsBySearch)));
                 }
             }
             catch (Exception exception)

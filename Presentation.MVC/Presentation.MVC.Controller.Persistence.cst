@@ -403,7 +403,7 @@ namespace <%= Namespace %>
                     string where = syncfusionGrid.ToLinqWhere(dataManager.Search, dataManager.Where, args);
                     string orderBy = syncfusionGrid.ToLinqOrderBy(dataManager.Sorted);        
                     int take = (dataManager.Skip == 0 && dataManager.Take == 0) ? AppDefaults.SyncfusionRecordsBySearch : dataManager.Take; // Excel Filtering
-                    data = ZViewHelper<<%= className %>ViewModel, <%= className %>DTO, <%= className %>>.ToViewList(Repository.Select(where, args.ToArray(), orderBy, dataManager.Skip, take));
+                    data = ZViewHelper<<%= className %>ViewModel, <%= className %>DTO, <%= className %>>.ToViewList(Repository.Search(where, args.ToArray(), orderBy, dataManager.Skip, take));
         
                     if (dataManager.RequiresCounts)
                     {

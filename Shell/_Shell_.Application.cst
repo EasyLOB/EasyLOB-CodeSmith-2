@@ -61,7 +61,7 @@ namespace <%= Application %>.Shell
 
             <%= Application %>GenericApplication<TEntity> application =
                 (<%= Application %>GenericApplication<TEntity>)container.Resolve<I<%= Application %>GenericApplication<TEntity>>();
-            IEnumerable<TEntity> enumerable = application.SelectAll(operationResult);
+            IEnumerable<TEntity> enumerable = application.SearchAll(operationResult);
             if (operationResult.Ok)
             {
                 Console.WriteLine(typeof(TEntity).Name + ": {0}", enumerable.Count());
@@ -80,7 +80,7 @@ namespace <%= Application %>.Shell
 
             <%= Application %>GenericApplicationDTO<TEntityDTO, TEntity> application =
                 (<%= Application %>GenericApplicationDTO<TEntityDTO, TEntity>)container.Resolve<I<%= Application %>GenericApplicationDTO<TEntityDTO, TEntity>>();
-            IEnumerable<TEntityDTO> enumerable = application.SelectAll(operationResult);
+            IEnumerable<TEntityDTO> enumerable = application.SearchAll(operationResult);
             if (operationResult.Ok)
             {
                 Console.WriteLine(typeof(TEntity).Name + ": {0}", enumerable.Count());
