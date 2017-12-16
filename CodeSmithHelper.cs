@@ -42,6 +42,7 @@ namespace XCodeSmith
                     "CEP",          // Código de Endereçamento Postal
                     "CFOP",         // Código Fiscal de Operação e Prestação
                     "CNPJ",         // Cadastro Nacional de Pessoas Jurídicas    
+                    "COFINS",       // COFINS
                     "CPF",          // Cadastro de Pessoas Físicas
                     "CST",          // Código de Situação Tributária
                     "CTE",          // Conhecimento de Transporte Eletrônico
@@ -57,6 +58,7 @@ namespace XCodeSmith
                     "NCM",          // Nomeclatura Comum do Mercosul
                     "NF",           // Nota Fiscal
                     "Pais",         // País
+                    "PIS",          // PIS
                     "PD",           // Pedido
                     "RG",           // Registro Geral
                     "UF",           // Unidade da Federação
