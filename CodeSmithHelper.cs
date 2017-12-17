@@ -42,6 +42,7 @@ namespace XCodeSmith
                     "CEP",          // Código de Endereçamento Postal
                     "CFOP",         // Código Fiscal de Operação e Prestação
                     "CNPJ",         // Cadastro Nacional de Pessoas Jurídicas    
+                    "CNPJCPF",      // CNPJ + CPF
                     "COFINS",       // COFINS
                     "CPF",          // Cadastro de Pessoas Físicas
                     "CST",          // Código de Situação Tributária
@@ -50,6 +51,7 @@ namespace XCodeSmith
                     "ICMS",         // Imposto sobre Circulação de Mercadorias e Serviços
                     "ICMSST",       // ICMS Substituição Tributária
                     "IE",           // Inscrição Estadual
+                    "IERG",         // IE + RG
                     "IPI",          // Imposto de Produtos Industralizados
                     "IR",           // Imposto de Renda
                     "IRRF",         // Imposto de Renda Retido na Fonte
@@ -61,9 +63,8 @@ namespace XCodeSmith
                     "PIS",          // PIS
                     "PD",           // Pedido
                     "RG",           // Registro Geral
+                    "SUFRAMA",      // SUFRAMA
                     "UF",           // Unidade da Federação
-                    "CNPJCPF",      // CNPJ + CPF
-                    "IERG",         // IE + RG
                     //
                     "AZ",
                     "News"
