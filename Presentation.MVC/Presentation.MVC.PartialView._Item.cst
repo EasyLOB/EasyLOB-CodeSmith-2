@@ -169,7 +169,7 @@ string keyProperty = PropertyName(keyColumn.Name);
         }
     } %>
 
-            if (controllerAction != "create" || profile.Class.IsIdentity) {
+            if (controllerAction != "create" || profile.IsIdentity) {
 <%  foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
         string propertyName = PropertyName(column.Name); %>
                 $("#Group_<%= className %>_<%= propertyName %>").hide();
