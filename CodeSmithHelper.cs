@@ -56,6 +56,7 @@ namespace XCodeSmith
                     "IR",           // Imposto de Renda
                     "IRRF",         // Imposto de Renda Retido na Fonte
                     "ISS",          // Imposto sobre Serviços
+                    "MVA",          // MVA
                     "MVAICMSST",    // MVA ICMS Substituição Tributária
                     "NCM",          // Nomeclatura Comum do Mercosul
                     "NF",           // Nota Fiscal
