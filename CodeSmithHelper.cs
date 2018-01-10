@@ -65,10 +65,7 @@ namespace XCodeSmith
                     "PD",           // Pedido
                     "RG",           // Registro Geral
                     "SUFRAMA",      // SUFRAMA
-                    "UF",           // Unidade da Federação
-                    //
-                    "AZ",
-                    "News"
+                    "UF"            // Unidade da Federação
                 };
             }
         }
