@@ -33,8 +33,8 @@
     "Text": "PresentationResources.Tasks",
     "SubMenus": [
       {
-        "Text": "<%= Application %>PresentationResources.Task<%= Application %>APIIndex",
-        "Url": "/<%= Application %>Tasks/<%= Application %>APIIndex"
+        "Text": "<%= Application %>PresentationResources.Task<%= Application %>Help",
+        "Url": "/<%= Application %>Tasks/<%= Application %>Help"
       },
       {
         "Text": "<%= Application %>PresentationResources.Task<%= Application %>Status",
