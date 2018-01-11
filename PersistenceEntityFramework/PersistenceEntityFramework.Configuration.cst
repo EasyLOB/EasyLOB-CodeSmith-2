@@ -93,14 +93,16 @@ namespace <%= Namespace %>
             pkPropertyName = pkPropertyName == className ? pkPropertyName + fkPropertyName : pkPropertyName;        
                 
             bool isNullable = fkColumn.AllowDBNull;
-            string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+            //string pkClassName2 = pkClassName;
+            //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+            string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName;
 
             foreach (ColumnSchema column in fkTable.ForeignKeyMemberColumns) { %>
             
 <%              if (isNullable) {%>        
-            this.HasOptional(x => x.<%= pkClassPropertyName %>)
+            this.HasOptional(x => x.<%= pkClassName2 %>)
 <%              } else { %>            
-            this.HasRequired(x => x.<%= pkClassPropertyName %>)
+            this.HasRequired(x => x.<%= pkClassName2 %>)
 <%              } %>            
                 .WithMany(x => x.<%= Plural(fkClassName, Culture) %>)
                 .HasForeignKey(x => x.<%= fkPropertyName %>);

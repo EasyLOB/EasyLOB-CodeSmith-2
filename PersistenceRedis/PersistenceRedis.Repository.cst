@@ -54,8 +54,10 @@ namespace <%= Namespace %>
         ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
         string pkPropertyName = PropertyName(pkColumn.Name);
         
-        string pkClassPropertyName = pkClassName == fkClassName ? pkClassName + fkPropertyName : pkClassName; %>
-                <%= objectName %>.<%= pkClassPropertyName %> = UnitOfWork.GetRepository<<%= pkClassName %>>().GetById(<%= objectName %>.<%= fkPropertyName %>);
+        //string pkClassName2 = pkClassName;
+        //string pkClassName2 = pkClassName == fkClassName ? pkClassName + fkPropertyName : pkClassName;
+        string pkClassName2 = pkClassName == fkClassName ? pkClassName + "_" + pkClassName : pkClassName; %>
+                <%= objectName %>.<%= pkClassName2 %> = UnitOfWork.GetRepository<<%= pkClassName %>>().GetById(<%= objectName %>.<%= fkPropertyName %>);
 <%  } %>
             }
         }

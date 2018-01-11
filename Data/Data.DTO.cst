@@ -72,12 +72,12 @@ namespace <%= Namespace %>
             ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
             string pkPropertyName = PropertyName(pkColumn.Name);
             
-            //string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
-            string pkClassPropertyName = pkClassName; %>
+            //string pkClassName2 = pkClassName;
+            //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+            string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName; %>
 
-        public virtual string <%= pkClassName %>LookupText { get; set; } // <%= fkPropertyName %>
-<%      //public virtual string <= pkClassPropertyName >LookupText { get; set; } // <= fkPropertyName >
-        } %>
+        public virtual string <%= pkClassName2 %>LookupText { get; set; } // <%= fkPropertyName %>
+<%      } %>
     
         #endregion Associations FK
 <%  } %>
@@ -121,9 +121,10 @@ namespace <%= Namespace %>
             ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
             string pkPropertyName = PropertyName(pkColumn.Name);
             
-            //string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
-            string pkClassPropertyName = pkClassName; %>
-            <%= pkClassPropertyName %>LookupText = null;
+            //string pkClassName2 = pkClassName;
+            //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+            string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName; %>
+            <%= pkClassName2 %>LookupText = null;
 <%      }
     } %>    
             LookupText = null;
@@ -176,14 +177,15 @@ namespace <%= Namespace %>
             ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
             string pkPropertyName = PropertyName(pkColumn.Name);
             
-            string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+            //string pkClassName2 = pkClassName;
+            //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+            string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName;
             
             if (++commaIndex >= commaParameters + SourceTable.ForeignKeys.Count) {
                 comma = "";
             } %>
-            string <%= ObjectName(pkClassName, Culture) %>LookupText = null<%= comma %>
-<%          //<= comma >string <= ObjectName(pkClassPropertyName, Culture) >LookupText = null
-            comma = ",";
+            string <%= ObjectName(pkClassName2, Culture) %>LookupText = null<%= comma %>
+<%          comma = ",";
         }
     } %>
         )
@@ -204,10 +206,11 @@ namespace <%= Namespace %>
             string pkClassName = ClassName(fkTable.PrimaryKeyTable.FullName, Culture);            
             ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
             string pkPropertyName = PropertyName(pkColumn.Name);
-            
-            //string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
-            string pkClassPropertyName = pkClassName; %>
-            <%= pkClassPropertyName %>LookupText = <%= ObjectName(pkClassPropertyName, Culture) %>LookupText;
+                        
+            //string pkClassName2 = pkClassName;
+            //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+            string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName; %>
+            <%= pkClassName2 %>LookupText = <%= ObjectName(pkClassName2, Culture) %>LookupText;
 <%      }
     } %>
             LookupText = null;
@@ -326,13 +329,14 @@ namespace <%= Namespace %>
             ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
             string pkPropertyName = PropertyName(pkColumn.Name);
             
-            //string pkClassPropertyName = pkClassName;
-            string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+            //string pkClassName2 = pkClassName;
+            //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+            string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName;
 
             if (++commaIndex >= SourceTable.Columns.Count + SourceTable.ForeignKeys.Count + 1) {
                 comma = "";
             } %>
-                dto.<%= pkClassName %>LookupText = <%= objectName %>.<%= pkClassPropertyName %> == null ? null : <%= objectName %>.<%= pkClassPropertyName %>.LookupText<%= comma %>;
+                dto.<%= pkClassName2 %>LookupText = <%= objectName %>.<%= pkClassName2 %> == null ? null : <%= objectName %>.<%= pkClassName2 %>.LookupText<%= comma %>;
 <%
         }
     } %>                dto.LookupText = <%= objectName %>.LookupText;

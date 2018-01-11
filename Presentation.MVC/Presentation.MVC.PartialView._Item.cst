@@ -29,8 +29,12 @@ string keyProperty = PropertyName(keyColumn.Name);
 @{
     string CSHTML = "_<%= className %>Item.cshtml";
 <%  foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
-        string pkClassName = ClassName(fkTable.PrimaryKeyTable.FullName, Culture); %>    
-    string <%= ObjectName(pkClassName, Culture) %>Text = Model.<%= className %> == null ? "" : (Model.<%= className %>.<%= pkClassName %>LookupText ?? "");
+        string pkClassName = ClassName(fkTable.PrimaryKeyTable.FullName, Culture);
+        
+        //string pkClassName2 = pkClassName;
+        //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+        string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName; %>    
+    string <%= ObjectName(pkClassName2, Culture) %>Text = Model.<%= className %> == null ? "" : (Model.<%= className %>.<%= pkClassName2 %>LookupText ?? "");
 <%  }
 
     int image = 0;
@@ -82,14 +86,18 @@ string keyProperty = PropertyName(keyColumn.Name);
                 
 <%          if (column.IsForeignKeyMember) {
                 string fkClassName = ClassName(FKTableName(SourceTable, column), Culture);
-                string fkObjectName = ObjectName(fkClassName, Culture); %>
-                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditCSSFor("<%= fkClassName %>LookupText")">
+    
+                //string fkClassName2 = fkClassName;
+                //string fkClassName2 = fkClassName == className ? fkClassName + fkPropertyName : fkClassName;
+                string fkClassName2 = fkClassName == className ? fkClassName + "_" + fkClassName : fkClassName;    
+                %>
+                <div id="Group_<%= className %>_<%= propertyName %>" class="@AppDefaults.CssClassGroup @<%= className %>.Profile.EditCSSFor("<%= fkClassName2 %>LookupText")">
                     @Html.LabelFor(model => model.<%= className %>.<%= propertyName %>, new { @class = AppDefaults.<%= cssClassLabel %> })
                     @Html.EditorFor(model => model.<%= className %>.<%= propertyName %>, new { htmlAttributes = new { @class = AppDefaults.CssClassEditor, id = "<%= className %>_<%= propertyName %>" } })
                     @{
                         Html.RenderAction("Lookup", "<%= fkClassName %>", new
                         {
-                            Text = <%= fkObjectName %>Text,
+                            Text = <%= ObjectName(fkClassName2, Culture) %>Text,
                             ValueId = "<%= className %>_<%= propertyName %>"
                         });
                     }

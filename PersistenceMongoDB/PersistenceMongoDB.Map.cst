@@ -52,9 +52,11 @@ foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
     ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
     string pkPropertyName = PropertyName(pkColumn.Name);
     
-    string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+    //string pkClassName2 = pkClassName;
+    //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+    string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName;
     
-    associations += (associations == "" ? " " : ", ") + "\"" + pkClassPropertyName + "\"";
+    associations += (associations == "" ? " " : ", ") + "\"" + pkClassName2 + "\"";
 
     string associationKey = "";
     foreach(ColumnSchema column in fkTable.PrimaryKeyMemberColumns)

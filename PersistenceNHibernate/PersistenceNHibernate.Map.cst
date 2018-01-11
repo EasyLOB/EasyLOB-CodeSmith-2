@@ -97,11 +97,13 @@ namespace <%= Namespace %>
             pkPropertyName = pkPropertyName == className ? pkPropertyName + fkPropertyName : pkPropertyName;        
                 
             bool isNullable = fkColumn.AllowDBNull;
-            string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+            //string pkClassName2 = pkClassName;
+            //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+            string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName;
 
             foreach (ColumnSchema column in fkTable.ForeignKeyMemberColumns) { %>
                         
-            References(x => x.<%= pkClassPropertyName %>)
+            References(x => x.<%= pkClassName2 %>)
                 .Column("<%= fkColumn.Name %>");
 <%          }
         } %>

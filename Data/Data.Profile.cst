@@ -52,9 +52,11 @@ foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
     ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
     string pkPropertyName = PropertyName(pkColumn.Name);
     
-    string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+    //string pkClassName2 = pkClassName;
+    //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+    string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName;
     
-    associations += (associations == "" ? " " : ", ") + "\"" + pkClassPropertyName + "\"";
+    associations += (associations == "" ? " " : ", ") + "\"" + pkClassName2 + "\"";
 
     string associationKey = "";
     foreach(ColumnSchema column in fkTable.PrimaryKeyMemberColumns)
@@ -179,8 +181,10 @@ namespace <%= Namespace %>
             ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
             string pkPropertyName = PropertyName(pkColumn.Name);
     
-            string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName; %>                        
-                    "<%= pkClassPropertyName %>"<%= comma %>
+            //string pkClassName2 = pkClassName;
+            //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+            string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName; %>
+                    "<%= pkClassName2 %>"<%= comma %>
 <%          if (++commaIndex >= SourceTable.ForeignKeys.Count) {
                 comma = "";
             }
@@ -250,8 +254,13 @@ namespace <%= Namespace %>
         string editWidthCSS = BootstrapWidth(column);
         string fkTable = FKTableName(SourceTable, column).Replace("dbo.", ""); %>
                 new ZProfileProperty(<%= gridVisible %>, <%= gridSearch %>, <%= gridWidth %>, <%= editVisible %>, <%= editReadOnly %>, "<%= editWidthCSS %>", "<%= PropertyName(column.Name) %>")<%= columnIsForeignKey ? "," : comma %>
-<%      if (columnIsForeignKey) { %>                        
-                new ZProfileProperty(true , true , 200, false, false, "col-md-4", "<%= ClassName(fkTable, Culture) %>LookupText")<%= comma %>
+<%      if (columnIsForeignKey) {
+                string pkClassName = ClassName(fkTable, Culture);                
+
+                //string pkClassName2 = pkClassName;
+                //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+                string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName; %>
+                new ZProfileProperty(true , true , 200, false, false, "col-md-4", "<%= pkClassName2 %>LookupText")<%= comma %>
 <%      }
     } %>
             }

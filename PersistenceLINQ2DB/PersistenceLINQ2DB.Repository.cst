@@ -57,11 +57,13 @@ namespace <%= Namespace %>
         ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
         string pkPropertyName = PropertyName(pkColumn.Name);
         
-        string pkClassPropertyName = pkClassName == fkClassName ? pkClassName + fkPropertyName : pkClassName;    
+        //string pkClassName2 = pkClassName;    
+        //string pkClassName2 = pkClassName == fkClassName ? pkClassName + fkPropertyName : pkClassName;    
+        string pkClassName2 = pkClassName == fkClassName ? pkClassName + "_" + pkClassName : pkClassName;    
         if (fkColumn.AllowDBNull) { %>
-                from <%= ObjectName(pkClassPropertyName, Culture) %> in UnitOfWork.GetQuery<<%= pkClassName %>>().Where(x => x.<%= pkPropertyName %> == <%= objectName %>.<%= fkPropertyName %>).DefaultIfEmpty() // LEFT JOIN
+                from <%= ObjectName(pkClassName2, Culture) %> in UnitOfWork.GetQuery<<%= pkClassName %>>().Where(x => x.<%= pkPropertyName %> == <%= objectName %>.<%= fkPropertyName %>).DefaultIfEmpty() // LEFT JOIN
 <%      } else { %>                
-                join <%= ObjectName(pkClassPropertyName, Culture) %> in UnitOfWork.GetQuery<<%= pkClassName %>>() on <%= objectName %>.<%= fkPropertyName %> equals <%= ObjectName(pkClassPropertyName, Culture) %>.<%= pkPropertyName %> // INNER JOIN
+                join <%= ObjectName(pkClassName2, Culture) %> in UnitOfWork.GetQuery<<%= pkClassName %>>() on <%= objectName %>.<%= fkPropertyName %> equals <%= ObjectName(pkClassName2, Culture) %>.<%= pkPropertyName %> // INNER JOIN
 <%      }
     } %>
                 select new <%= className %>
@@ -81,12 +83,14 @@ namespace <%= Namespace %>
         ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
         string pkPropertyName = PropertyName(pkColumn.Name);
         
-        string pkClassPropertyName = pkClassName == fkClassName ? pkClassName + fkPropertyName : pkClassName;
+        //string pkClassName2 = pkClassName;
+        //string pkClassName2 = pkClassName == fkClassName ? pkClassName + fkPropertyName : pkClassName;
+        string pkClassName2 = pkClassName == fkClassName ? pkClassName + "_" + pkClassName : pkClassName;
         
         if (++commaIndex >= SourceTable.Columns.Count + SourceTable.ForeignKeys.Count) {
             comma = "";
         } %>
-                    <%= pkClassPropertyName %> = <%= ObjectName(pkClassPropertyName, Culture) %><%= comma %>
+                    <%= pkClassName2 %> = <%= ObjectName(pkClassName2, Culture) %><%= comma %>
 <%  } %>
                 };
         }

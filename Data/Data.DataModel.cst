@@ -52,9 +52,10 @@ foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
     ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
     string pkPropertyName = PropertyName(pkColumn.Name);
     
-    string pkClassPropertyName = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+    string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName;
+    //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
     
-    associations += (associations == "" ? " " : ", ") + "\"" + pkClassPropertyName + "\"";
+    associations += (associations == "" ? " " : ", ") + "\"" + pkClassName2 + "\"";
 
     string associationKey = "";
     foreach(ColumnSchema column in fkTable.PrimaryKeyMemberColumns)
@@ -167,7 +168,7 @@ namespace <%= Namespace %>
             string fkPropertyName = "";
             string pkClassName = "";
             string pkPropertyName = "";
-            string pkClassPropertyName = "";
+            string pkClassName2 = "";
             foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
                 fkClassName = ClassName(fkTable.ForeignKeyTable.FullName, Culture);
                 ColumnSchema fkColumn = fkTable.ForeignKeyMemberColumns[0];
@@ -177,7 +178,8 @@ namespace <%= Namespace %>
                 ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
                 pkPropertyName = PropertyName(pkColumn.Name);
                 
-                pkClassPropertyName = pkClassName == fkClassName ? pkClassName + fkPropertyName : pkClassName;
+                pkClassName2 = pkClassName == fkClassName ? pkClassName + "_" + pkClassName : pkClassName;
+                //pkClassName2 = pkClassName == fkClassName ? pkClassName + fkPropertyName : pkClassName;
                 
                 if (fkColumn.Name == column.Name)
                 {
@@ -190,11 +192,11 @@ namespace <%= Namespace %>
         
         public virtual <%= GetType(column.DataType, isNullable) %> <%= PropertyName(column.Name) %>
         {
-            get { return this.<%= pkClassPropertyName %> == null ? _<%= ObjectName(column.Name, Culture) %> : this.<%= pkClassPropertyName %>.<%= pkPropertyName %>; }
+            get { return this.<%= pkClassName2 %> == null ? _<%= ObjectName(column.Name, Culture) %> : this.<%= pkClassName2 %>.<%= pkPropertyName %>; }
             set
             {
                 _<%= ObjectName(column.Name, Culture) %> = value;
-                <%= pkClassPropertyName %> = null;
+                <%= pkClassName2 %> = null;
             }
         }
 <%      }
@@ -213,9 +215,10 @@ namespace <%= Namespace %>
             ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
             string pkPropertyName = PropertyName(pkColumn.Name);
             
-            string pkClassPropertyName = pkClassName == fkClassName ? pkClassName + fkPropertyName : pkClassName; %>
+            string pkClassName2 = pkClassName == fkClassName ? pkClassName + "_" + pkClassName : pkClassName;
+            //string pkClassName2 = pkClassName == fkClassName ? pkClassName + fkPropertyName : pkClassName; %>
 
-        public virtual <%= pkClassName %> <%= pkClassPropertyName %> { get; set; } // <%= fkPropertyName %>
+        public virtual <%= pkClassName %> <%= pkClassName2 %> { get; set; } // <%= fkPropertyName %>
 <%      } %>
 
         #endregion Associations FK
@@ -273,8 +276,9 @@ namespace <%= Namespace %>
             ColumnSchema pkColumn = fkTable.PrimaryKeyMemberColumns[0];
             string pkPropertyName = PropertyName(pkColumn.Name);
             
-            string pkClassPropertyName = pkClassName == fkClassName ? pkClassName + fkPropertyName : pkClassName; %>
-            //<%= pkClassPropertyName %> = new <%= pkClassName %>();
+            string pkClassName2 = pkClassName == fkClassName ? pkClassName + "_" + pkClassName : pkClassName;
+            //string pkClassName2 = pkClassName == fkClassName ? pkClassName + fkPropertyName : pkClassName; %>
+            //<%= pkClassName2 %> = new <%= pkClassName %>();
 <%      }
     }
     if (SourceTable.PrimaryKeys.Count > 0) { %>

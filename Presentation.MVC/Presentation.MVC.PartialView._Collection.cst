@@ -152,13 +152,18 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
                 .Add();
 <%      if (columnIsForeignKey) {
             foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
-                if (fkTable.ForeignKeyMemberColumns[0].Name == column.Name) { %>
-            column.Field("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText")
+                if (fkTable.ForeignKeyMemberColumns[0].Name == column.Name) {
+                    string pkClassName = ClassName(fkTable.PrimaryKeyTable.FullName, Culture);
+
+                    //string pkClassName2 = pkClassName;
+                    //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
+                    string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName; %>
+            column.Field("<%= pkClassName2 %>LookupText")
                 .AllowEditing(false)
                 .Type("string")
                 .HeaderText(<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>Resources.EntitySingular)
-                .Visible(<%= className %>.Profile.IsGridVisibleFor("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText"))
-                .Width(<%= className %>.Profile.GridWidthFor("<%= ClassName(fkTable.PrimaryKeyTable.FullName, Culture) %>LookupText"))
+                .Visible(<%= className %>.Profile.IsGridVisibleFor("<%= pkClassName2 %>LookupText"))
+                .Width(<%= className %>.Profile.GridWidthFor("<%= pkClassName2 %>LookupText"))
                 .Add();
 <%              }
             }
