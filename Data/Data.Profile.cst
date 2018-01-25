@@ -184,7 +184,7 @@ namespace <%= Namespace %>
             //string pkClassName2 = pkClassName;
             //string pkClassName2 = pkClassName == className ? pkClassName + fkPropertyName : pkClassName;
             string pkClassName2 = pkClassName == className ? pkClassName + "_" + pkClassName : pkClassName; %>
-                    "<%= pkClassName2 %>"<%= comma %>
+                "<%= pkClassName2 %>"<%= comma %>
 <%          if (++commaIndex >= SourceTable.ForeignKeys.Count) {
                 comma = "";
             }
@@ -200,7 +200,7 @@ namespace <%= Namespace %>
         commaIndex = 1;
         foreach (TableKeySchema primaryKey in SourceTable.PrimaryKeys) {
             string pkClassName = ClassName(primaryKey.ForeignKeyTable.Name, Culture); %>                        
-                    { "<%= Plural(pkClassName, Culture) %>", true }<%= comma %>
+                { "<%= Plural(pkClassName, Culture) %>", true }<%= comma %>
 <%          if (++commaIndex >= SourceTable.PrimaryKeys.Count) {
                 comma = "";
             }
