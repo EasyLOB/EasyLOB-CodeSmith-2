@@ -35,8 +35,10 @@ namespace XCodeSmith
                 return new string[]
                 {
                     // en-US
-                    "ERP",          // Enterprise Resource Planning
                     "CRM",          // Customer Relationship Management
+                    "ECommerce",
+                    "EMail",
+                    "ERP",          // Enterprise Resource Planning
                     "ZIP",          // Zone Improvement Plan
                     // pt-BR
                     "CEP",          // Código de Endereçamento Postal
