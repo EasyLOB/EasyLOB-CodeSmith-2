@@ -171,6 +171,9 @@ namespace <%= Namespace %>
             Associations: new List<string>
             {
 <%      comma = ",";
+        if (SourceTable.ForeignKeys.Count == 1) {
+            comma = "";
+        }
         commaIndex = 1;
         foreach (TableKeySchema fkTable in SourceTable.ForeignKeys) {
             string fkClassName = ClassName(fkTable.ForeignKeyTable.FullName, Culture);
@@ -197,6 +200,9 @@ namespace <%= Namespace %>
             Collections: new Dictionary<string, bool>
             {
 <%      comma = ",";
+        if (SourceTable.PrimaryKeys.Count == 1) {
+            comma = "";
+        }    
         commaIndex = 1;
         foreach (TableKeySchema primaryKey in SourceTable.PrimaryKeys) {
             string pkClassName = ClassName(primaryKey.ForeignKeyTable.Name, Culture); %>                        
