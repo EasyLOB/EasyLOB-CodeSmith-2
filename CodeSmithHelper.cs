@@ -63,6 +63,7 @@ namespace XCodeSmith
                     "MVAICMSST",    // MVA ICMS Substituição Tributária
                     "NCM",          // Nomeclatura Comum do Mercosul
                     "NF",           // Nota Fiscal
+                    "NSU",          // Numero Sequencial Único
                     "Pais",         // País
                     "PIS",          // PIS
                     "PD",           // Pedido
@@ -172,6 +173,10 @@ namespace XCodeSmith
             if (s.EndsWith("ao"))
             {
                 result = System.Text.RegularExpressions.Regex.Replace(s, "ao$", "oes"); // ao => oes
+            }
+            else if (s.EndsWith("il"))
+            {
+                result = System.Text.RegularExpressions.Regex.Replace(s, "l$", "ls"); // il => ils
             }
             else if (s.EndsWith("l"))
             {
