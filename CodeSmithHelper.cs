@@ -39,7 +39,8 @@ namespace XCodeSmith
                     "ECommerce",
                     "EMail",
                     "ERP",          // Enterprise Resource Planning
-                    "TID",          // Transaction ID
+                    "KPI",          // Key Performance Indicator
+                    "ERP",          // Enterprise Resource Planning
                     "ZIP",          // Zone Improvement Plan
                     // pt-BR
                     "CEP",          // Código de Endereçamento Postal
