@@ -112,7 +112,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
         }
         if (IsBoolean(column.DataType)) { %>
                 .Type("boolean")
-                .EditType(EditingType.Boolean)<%
+                .EditType(EditingType.BooleanEdit)<%
         } else if (IsDate(column.DataType)) { %>
                 .Type("date")
                 .EditType(EditingType.Datepicker)
@@ -127,7 +127,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
                 .Format(SyncfusionPatternResources.GridFormat_DateTime)<%
         } else if (IsDecimal(column.DataType) || IsFloat(column.DataType) || IsInteger(column.DataType)) { %>
                 .Type("number")
-                .EditType(EditingType.Numeric)<%
+                .EditType(EditingType.NumericEdit)<%
             if (IsDecimal(column.DataType) || IsFloat(column.DataType)) { %>
                 .Format(SyncfusionPatternResources.GridFormat_Float)<%
             } else { %>
@@ -135,7 +135,7 @@ foreach (ColumnSchema column in SourceTable.PrimaryKey.MemberColumns) {
             }
         } else { %>
                 .Type("string")
-                .EditType(EditingType.String)<%
+                .EditType(EditingType.StringEdit)<%
         } %>
                 .HeaderText(<%= className %>Resources.Property<%= PropertyName(column.Name) %>)<%
         if (columnIsIdentity) { %>
