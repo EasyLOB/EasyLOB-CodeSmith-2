@@ -42,7 +42,7 @@ using <%= Application %>.Data;
 using <%= Application %>.Persistence;
 using EasyLOB;
 using EasyLOB.Data;
-using EasyLOB.Library.WebApi;
+using EasyLOB.Library.AspNet;
 using EasyLOB.Mvc;
 using EasyLOB.WebApi;
 using System;
