@@ -11,37 +11,28 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 using <%= Application %>.Data;
-using EasyLOB;
-using EasyLOB.Data;
-using EasyLOB.Persistence;
+using AutoMapper;
 using System;
-using System.Linq;
 
 namespace <%= Application %>.Shell
 {
     partial class Program
     {
-        private static void Persistence<%= Application %>Demo()
+        private static void AutoMapper<%= Application %>Demo()
         {
-            Console.WriteLine("\nPersistence <%= Application %> Demo\n");
-
-            IUnitOfWork unitOfWork = (IUnitOfWork)container.Resolve<I<%= Application %>UnitOfWork>();
-            Console.WriteLine(unitOfWork.GetType().FullName + " with " + unitOfWork.DBMS.ToString() + "\n");
-
+            Console.WriteLine("\nApplication <%= Application %> Demo\n");
 <%  foreach (TableSchema SourceTable in SourceTables) {
         string tableName = TableName(SourceTable.FullName);
         string className = ClassName(SourceTable.FullName, Culture);
         string objectName = ObjectName(SourceTable.FullName, Culture); %>
-            Persistence<%= Application %>Data<<%= className %>>(unitOfWork);
-<%  } %>
-        }
 
-        private static void Persistence<%= Application %>Data<TEntity>(IUnitOfWork unitOfWork)
-            where TEntity : class, IZDataBase
-        {
-            IGenericRepository<TEntity> repository = unitOfWork.GetRepository<TEntity>();
-            TEntity entity = repository.Query.FirstOrDefault();
-            Console.WriteLine(typeof(TEntity).Name + ": " + repository.CountAll());
+            {
+                Console.WriteLine("<%= className %>");
+                <%= className %> data = new <%= className %>();
+                <%= className %>DTO dto = Mapper.Map<<%= className %>DTO>(data);
+                data = Mapper.Map<<%= className %>>(dto);
+            }
+<%  } %>
         }
     }
 }

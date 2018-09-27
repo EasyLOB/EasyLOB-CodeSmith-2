@@ -1,0 +1,43 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="..\CodeSmithHelper.cs" Inherits="XCodeSmith.CodeSmithHelper" Debug="False" Description="" %>
+
+<%@ Property Name="Application" Type="String" Category="Application" Description="Application" %>
+
+<%@ Property Name="Culture" Type="XCodeSmith.Cultures" Category="Context" Description="Culture for Plural Rules" %>
+
+<%@ Property Name="SourceTables" Type="SchemaExplorer.TableSchemaCollection" Category="Database" Description="Tables" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+using <%= Application %>.Data;
+using AutoMapper;
+using System.Web.Mvc;
+
+namespace <%= Application %>.Mvc
+{
+    public partial class <%= Application %>TasksController
+    {
+        #region Methods
+
+        // GET: <%= Application %>Tasks/EasyDGAutoMapper
+        [HttpGet]
+        public ActionResult <%= Application %>AutoMapper()
+        {
+<%  foreach (TableSchema SourceTable in SourceTables) {
+        string tableName = TableName(SourceTable.FullName);
+        string className = ClassName(SourceTable.FullName, Culture);
+        string objectName = ObjectName(SourceTable.FullName, Culture); %>
+            {
+                <%= className %>ViewModel view = new <%= className %>ViewModel();
+                <%= className %>DTO dto = Mapper.Map<<%= className %>DTO>(view);
+                view = Mapper.Map<<%= className %>ViewModel>(dto);
+            }
+
+<%  } %>        
+            return View();
+        }
+
+        #endregion Methods
+    }
+}
