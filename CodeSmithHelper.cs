@@ -699,7 +699,7 @@ namespace XCodeSmith
             string output2 = output + "/" + myNamespace + "/Views" + "/" + myApplication + "-Custom" + "/" + myApplication + "Tasks";
             CreateDirectory(output2);
             
-            GenerateTables(input + "/Service.WebAPI/Service.WebAPI.View.APIIndex.cst", sourceTables, myApplication, myNamespace, output2 + "/" + myApplication + "APIIndex.cshtml", culture);
+            GenerateTables(input + "/Service.WebAPI/Service.WebAPI.View.Help.cst", sourceTables, myApplication, myNamespace, output2 + "/" + myApplication + "APIIndex.cshtml", culture);
         }
         
         #endregion
