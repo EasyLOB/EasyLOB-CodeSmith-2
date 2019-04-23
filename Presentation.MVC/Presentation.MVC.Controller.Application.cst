@@ -204,7 +204,7 @@ namespace <%= Namespace %>
                         {
                             if (<%= objectName %>ItemModel.IsSave)
                             {
-                                <%= objectName %>ItemModel.OperationResult.StatusMessage =
+                                <%= objectName %>ItemModel.OperationResult.InformationMessage =
                                     EasyLOB.Resources.PresentationResources.CreateToUpdate;
                                 return JsonResultSuccess(<%= objectName %>ItemModel.OperationResult,
                                     Url.Action("Update", "<%= className %>", new { <%= pkObject %> }, Request.Url.Scheme));
